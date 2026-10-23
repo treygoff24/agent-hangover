@@ -927,6 +927,11 @@ class NoExecuteGitTests(unittest.TestCase):
 
     def test_config_defined_hooks_are_disabled(self) -> None:
         """`hook.<name>.command` runs whatever core.hooksPath says; each hook the config names is disabled."""
+        supported = subprocess.run(["git", "help", "--config"], capture_output=True, text=True,
+                                   env=git_safe_environment(), check=True).stdout.splitlines()
+        required = {"hook.<friendly-name>.command", "hook.<friendly-name>.event"}
+        if not required.issubset(supported):
+            self.skipTest("installed Git does not advertise config-defined hooks")
         marker = Path(self.temp.name) / "HOOK_RAN"
         for key, value in (("hook.planted.command", f"echo ran >> '{marker}'"), ("hook.planted.event", "pre-commit")):
             subprocess.run(["git", "-C", self.repo, "config", key, value], check=True)
