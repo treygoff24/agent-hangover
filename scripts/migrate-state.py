@@ -69,6 +69,7 @@ RUST_LABEL = re.compile(r"\bdeslop-rust (?=\d)")
 TEXT_SUFFIXES = {".md"}
 CAMPAIGN_FILES = {"config.json", "state.json", "state.json.lock", "owner", "gate-proofs.json"}
 CAMPAIGN_DIRS = {"runs", "fixes"}
+MAX_FILE_BYTES = 64 * 1024 * 1024
 
 # Load the trusted tool's own helpers, never modules from the target repository.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -138,7 +139,7 @@ def read_text(path: Path) -> str:
     # Applies the same no-follow, no-hard-link policy as repository reads.
     value = read_repo_file(CAMPAIGN.parent,
                            path.relative_to(CAMPAIGN.parent),
-                           purpose=f"campaign migration file {path.relative_to(CAMPAIGN)}")
+                           purpose=f"campaign migration file {path.relative_to(CAMPAIGN)}", limit=MAX_FILE_BYTES)
     if value is None:
         raise Refusal(f"missing campaign file: {path}")
     return value
@@ -297,13 +298,26 @@ def lock_state(root: Path, create: bool) -> Any:
     return handle
 
 
+def file_limit(value: str) -> int:
+    try:
+        size = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a whole number from 1 through 1024 MiB") from exc
+    if not 1 <= size <= 1024:
+        raise argparse.ArgumentTypeError("must be a whole number from 1 through 1024 MiB")
+    return size
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("repo", nargs="?", default=".", help="the repository holding .hangover/ (default: cwd)")
     parser.add_argument("--apply", action="store_true", help="write the changes (default: dry run)")
+    parser.add_argument("--max-file-mib", type=file_limit, default=64, metavar="N",
+                        help="per-file read limit in MiB (1-1024; default: 64); larger JSON needs more memory")
     args = parser.parse_args(argv)
 
-    global CAMPAIGN
+    global CAMPAIGN, MAX_FILE_BYTES
+    MAX_FILE_BYTES = args.max_file_mib * 1024 * 1024
     repo = Path(args.repo).expanduser().resolve()
     root = CAMPAIGN = repo / STATE_DIR
     try:

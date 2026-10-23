@@ -59,6 +59,12 @@ renames fix directories, and updates a recognized old owner marker. It does
 not invent an owner marker or change product code. It refuses tracked
 state, links, special files, malformed state, conflicting names and a held
 campaign lock. A refusal is a reason to stop and inspect the stated problem.
+Files read for migration are limited to 64 MiB each by default. For a known
+large history, add `--max-file-mib 256` to both the preview and `--apply`
+commands. The option accepts integers from 1 to 1024. This is a per-file
+input limit, not a RAM limit: parsing and retained rewrites can use several
+times the input size, and memory grows with the number of planned rewrites.
+
 If an apply fails after printing a backup, keep both directories and stop
 campaign work. Recovery must preserve the original `.hangover` directory
 and its owner binding; do not replace it with the backup directory blindly.

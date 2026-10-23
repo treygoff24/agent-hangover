@@ -65,6 +65,27 @@ class MigrationTests(unittest.TestCase):
         self.assertIn("nothing to migrate", again.stdout)
         self.assertEqual(backups, list(self.repo.glob(".hangover.pre-migrate-*")))
 
+    def test_explicit_file_limit_controls_structured_state_reads(self):
+        artifact = self.root / "runs" / "large.json"
+        artifact.write_text(json.dumps({"id": OLD, "details": "x" * (1024 * 1024)}))
+        limited = self.invoke("--max-file-mib", "1")
+        self.assertEqual(2, limited.returncode)
+        self.assertIn("larger than 1048576 bytes", limited.stderr)
+        self.assertIn("runs/large.json", limited.stderr)
+        self.assertFalse(list(self.repo.glob(".hangover.pre-migrate-*")))
+        raised = self.invoke("--max-file-mib", "2", "--apply")
+        self.assertEqual(0, raised.returncode, raised.stderr)
+        self.assertEqual(NEW, json.loads(artifact.read_text())["id"])
+
+    def test_file_limit_rejects_nonpositive_noninteger_and_excessive_values(self):
+        before = (self.root / "state.json").read_bytes()
+        for value in ("0", "-1", "1025", "unlimited", "1.5"):
+            with self.subTest(value=value):
+                result = self.invoke("--max-file-mib", value, "--apply")
+                self.assertEqual(2, result.returncode)
+                self.assertEqual(before, (self.root / "state.json").read_bytes())
+                self.assertFalse(list(self.repo.glob(".hangover.pre-migrate-*")))
+
     def test_large_raw_log_does_not_block_preview(self):
         runs = self.root / "runs" / "old-run"
         runs.mkdir(parents=True)
