@@ -1,0 +1,283 @@
+{
+ "kind": "dead-code",
+ "schema_version": 9,
+ "version": "3.31.0",
+ "elapsed_ms": 9,
+ "total_issues": 7,
+ "entry_points": {
+  "total": 1,
+  "sources": {
+   "package.json": 1
+  }
+ },
+ "summary": {
+  "total_issues": 7,
+  "unused_files": 4,
+  "unused_exports": 2,
+  "unused_types": 0,
+  "private_type_leaks": 0,
+  "deprecated_exports_in_use": 0,
+  "unused_dependencies": 1,
+  "unused_enum_members": 0,
+  "unused_class_members": 0,
+  "unused_store_members": 0,
+  "unprovided_injects": 0,
+  "unrendered_components": 0,
+  "unused_component_props": 0,
+  "unused_component_emits": 0,
+  "unused_component_inputs": 0,
+  "unused_component_outputs": 0,
+  "unused_svelte_events": 0,
+  "unused_server_actions": 0,
+  "unused_load_data_keys": 0,
+  "unresolved_imports": 0,
+  "unlisted_dependencies": 0,
+  "duplicate_exports": 0,
+  "type_only_dependencies": 0,
+  "test_only_dependencies": 0,
+  "dev_dependencies_in_production": 0,
+  "circular_dependencies": 0,
+  "re_export_cycles": 0,
+  "package_cycles": 0,
+  "boundary_violations": 0,
+  "boundary_coverage_violations": 0,
+  "boundary_call_violations": 0,
+  "policy_violations": 0,
+  "stale_suppressions": 0,
+  "unused_catalog_entries": 0,
+  "empty_catalog_groups": 0,
+  "unresolved_catalog_references": 0,
+  "unused_dependency_overrides": 0,
+  "misconfigured_dependency_overrides": 0,
+  "invalid_client_exports": 0,
+  "mixed_client_server_barrels": 0,
+  "misplaced_directives": 0,
+  "route_collisions": 0,
+  "dynamic_segment_name_conflicts": 0
+ },
+ "unused_files": [
+  {
+   "path": "src/dup_a.ts",
+   "finding_id": "dc1:unused-file:089c10654ce84b40",
+   "actions": [
+    {
+     "type": "delete-file",
+     "auto_fixable": false,
+     "description": "Delete this file",
+     "note": "File deletion may remove runtime functionality not visible to static analysis"
+    },
+    {
+     "type": "suppress-file",
+     "auto_fixable": false,
+     "description": "Suppress with a file-level comment at the top of the file",
+     "comment": "// fallow-ignore-file unused-file"
+    }
+   ],
+   "effective_severity": "error"
+  },
+  {
+   "path": "src/dup_b.ts",
+   "finding_id": "dc1:unused-file:deee9a50758c7661",
+   "actions": [
+    {
+     "type": "delete-file",
+     "auto_fixable": false,
+     "description": "Delete this file",
+     "note": "File deletion may remove runtime functionality not visible to static analysis"
+    },
+    {
+     "type": "suppress-file",
+     "auto_fixable": false,
+     "description": "Suppress with a file-level comment at the top of the file",
+     "comment": "// fallow-ignore-file unused-file"
+    }
+   ],
+   "effective_severity": "error"
+  },
+  {
+   "path": "src/dup_c.ts",
+   "finding_id": "dc1:unused-file:8e2fa94ad9b38b02",
+   "actions": [
+    {
+     "type": "delete-file",
+     "auto_fixable": false,
+     "description": "Delete this file",
+     "note": "File deletion may remove runtime functionality not visible to static analysis"
+    },
+    {
+     "type": "suppress-file",
+     "auto_fixable": false,
+     "description": "Suppress with a file-level comment at the top of the file",
+     "comment": "// fallow-ignore-file unused-file"
+    }
+   ],
+   "effective_severity": "error"
+  },
+  {
+   "path": "src/orphan.ts",
+   "finding_id": "dc1:unused-file:9fd2d414a2a9e611",
+   "actions": [
+    {
+     "type": "delete-file",
+     "auto_fixable": false,
+     "description": "Delete this file",
+     "note": "File deletion may remove runtime functionality not visible to static analysis"
+    },
+    {
+     "type": "suppress-file",
+     "auto_fixable": false,
+     "description": "Suppress with a file-level comment at the top of the file",
+     "comment": "// fallow-ignore-file unused-file"
+    }
+   ],
+   "effective_severity": "error"
+  }
+ ],
+ "unused_exports": [
+  {
+   "path": "src/lib.ts",
+   "export_name": "unusedExport",
+   "is_type_only": false,
+   "line": 2,
+   "col": 16,
+   "span_start": 53,
+   "is_re_export": false,
+   "finding_id": "dc1:unused-export:9b605bb79c849a67",
+   "actions": [
+    {
+     "type": "remove-export",
+     "auto_fixable": true,
+     "description": "Remove the unused export from the public API"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the line",
+     "comment": "// fallow-ignore-next-line unused-export"
+    }
+   ],
+   "effective_severity": "error"
+  },
+  {
+   "path": "src/lib.ts",
+   "export_name": "unusedConst",
+   "is_type_only": false,
+   "line": 3,
+   "col": 13,
+   "span_start": 95,
+   "is_re_export": false,
+   "finding_id": "dc1:unused-export:06513f7b88c96628",
+   "actions": [
+    {
+     "type": "remove-export",
+     "auto_fixable": true,
+     "description": "Remove the unused export from the public API"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the line",
+     "comment": "// fallow-ignore-next-line unused-export"
+    }
+   ],
+   "effective_severity": "error"
+  }
+ ],
+ "unused_types": [],
+ "private_type_leaks": [],
+ "deprecated_exports_in_use": [],
+ "unused_dependencies": [
+  {
+   "package_name": "left-pad",
+   "location": "dependencies",
+   "path": "package.json",
+   "line": 1,
+   "finding_id": "dc1:unused-dependency:555cb7b0d3c45f44",
+   "actions": [
+    {
+     "type": "remove-dependency",
+     "auto_fixable": true,
+     "description": "Remove from dependencies in package.json"
+    },
+    {
+     "type": "add-to-config",
+     "auto_fixable": false,
+     "description": "Add \"left-pad\" to ignoreDependencies in fallow config",
+     "config_key": "ignoreDependencies",
+     "value": "left-pad",
+     "value_schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json#/properties/ignoreDependencies/items"
+    }
+   ],
+   "effective_severity": "error"
+  }
+ ],
+ "unused_dev_dependencies": [],
+ "unused_optional_dependencies": [],
+ "unused_enum_members": [],
+ "unused_class_members": [],
+ "unresolved_imports": [],
+ "unlisted_dependencies": [],
+ "duplicate_exports": [],
+ "type_only_dependencies": [],
+ "test_only_dependencies": [],
+ "dev_dependencies_in_production": [],
+ "circular_dependencies": [],
+ "re_export_cycles": [],
+ "package_cycles": [],
+ "boundary_violations": [],
+ "boundary_coverage_violations": [],
+ "boundary_call_violations": [],
+ "policy_violations": [],
+ "stale_suppressions": [],
+ "unused_catalog_entries": [],
+ "empty_catalog_groups": [],
+ "unresolved_catalog_references": [],
+ "unused_dependency_overrides": [],
+ "misconfigured_dependency_overrides": [],
+ "invalid_client_exports": [],
+ "mixed_client_server_barrels": [],
+ "misplaced_directives": [],
+ "route_collisions": [],
+ "dynamic_segment_name_conflicts": [],
+ "gate_outcomes": {
+  "error-severity-findings": {
+   "status": "fail",
+   "enforced": true
+  }
+ },
+ "workspace_diagnostics": [
+  {
+   "path": "node_modules",
+   "kind": "node-modules-missing",
+   "message": "'node_modules' does not exist. Package exports and conditional exports cannot be read, framework plugins that activate on an installed package stay inactive, and dependency classification degrades, so imports and dependencies can be misreported. Run npm install / pnpm install / yarn / bun install first.",
+   "degrades_analysis": true
+  },
+  {
+   "path": ".",
+   "kind": "boundaries-not-configured",
+   "message": "No architecture boundaries are configured, so the boundary detector did not run and its violation counts are zero because nothing was measured. Add `boundaries` to the config, or set `boundary-violation` to off to state that the check is not wanted."
+  },
+  {
+   "path": ".",
+   "kind": "rule-packs-not-configured",
+   "message": "No rule packs are configured, so the policy detector did not run and its violation counts are zero because nothing was measured. Add `rulePacks` to the config, or set `policy-violation` to off to state that the check is not wanted."
+  }
+ ],
+ "next_steps": [
+  {
+   "id": "trace-unused-export",
+   "command": "fallow dead-code --trace src/lib.ts:unusedConst",
+   "reason": "verify an export is truly unused before deleting"
+  },
+  {
+   "id": "audit-changed",
+   "command": "fallow audit",
+   "reason": "gate only the files your branch changed (auto-detects the base)"
+  }
+ ],
+ "_meta": {
+  "telemetry": {
+   "analysis_run_id": "run_673b162fe2342c47"
+  }
+ }
+}

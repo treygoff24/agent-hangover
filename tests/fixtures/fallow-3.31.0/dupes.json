@@ -1,0 +1,180 @@
+{
+ "kind": "dupes",
+ "schema_version": 10,
+ "version": "3.31.0",
+ "elapsed_ms": 6,
+ "clone_groups": [
+  {
+   "instances": [
+    {
+     "file": "src/dup_a.ts",
+     "start_line": 1,
+     "end_line": 10,
+     "start_col": 20,
+     "end_col": 27,
+     "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+    },
+    {
+     "file": "src/dup_b.ts",
+     "start_line": 1,
+     "end_line": 10,
+     "start_col": 20,
+     "end_col": 27,
+     "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+    },
+    {
+     "file": "src/dup_c.ts",
+     "start_line": 1,
+     "end_line": 10,
+     "start_col": 20,
+     "end_col": 27,
+     "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+    }
+   ],
+   "token_count": 154,
+   "line_count": 10,
+   "fingerprint": "dup:6f87acd9",
+   "spread": 0,
+   "suggested_name": "total",
+   "actions": [
+    {
+     "type": "extract-shared",
+     "auto_fixable": false,
+     "description": "Extract duplicated code (10 lines, 3 instances) into a shared function"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the duplicated code",
+     "comment": "// fallow-ignore-next-line code-duplication"
+    }
+   ]
+  }
+ ],
+ "clone_families": [
+  {
+   "files": [
+    "src/dup_a.ts",
+    "src/dup_b.ts",
+    "src/dup_c.ts"
+   ],
+   "groups": [
+    {
+     "instances": [
+      {
+       "file": "src/dup_a.ts",
+       "start_line": 1,
+       "end_line": 10,
+       "start_col": 20,
+       "end_col": 27,
+       "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+      },
+      {
+       "file": "src/dup_b.ts",
+       "start_line": 1,
+       "end_line": 10,
+       "start_col": 20,
+       "end_col": 27,
+       "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+      },
+      {
+       "file": "src/dup_c.ts",
+       "start_line": 1,
+       "end_line": 10,
+       "start_col": 20,
+       "end_col": 27,
+       "fragment": "items: number[], limit: number): number {\n  let total = 0;\n  for (const item of items) {\n    if (item > limit) { total += item * 2; } else if (item < 0) { total -= item; } else { total += 1; }\n    if (total > 1000) { total = Math.floor(total / 3); }\n    for (let i = 0; i < item; i++) { total += i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : 1; }\n  }\n  const out: string[] = [];\n  for (const k of items) { out.push(String(k) + ':' + String(total)); }\n  return total + out.length"
+      }
+     ],
+     "token_count": 154,
+     "line_count": 10,
+     "fingerprint": "dup:6f87acd9",
+     "spread": 0,
+     "suggested_name": "total",
+     "actions": [
+      {
+       "type": "extract-shared",
+       "auto_fixable": false,
+       "description": "Extract duplicated code (10 lines, 3 instances) into a shared function"
+      },
+      {
+       "type": "suppress-line",
+       "auto_fixable": false,
+       "description": "Suppress with an inline comment above the duplicated code",
+       "comment": "// fallow-ignore-next-line code-duplication"
+      }
+     ]
+    }
+   ],
+   "total_duplicated_lines": 10,
+   "total_duplicated_tokens": 154,
+   "suggestions": [
+    {
+     "kind": "ExtractFunction",
+     "description": "Extract shared function (10 lines) from dup_a.ts, dup_b.ts, dup_c.ts",
+     "estimated_savings": 20
+    }
+   ],
+   "actions": [
+    {
+     "type": "extract-shared",
+     "auto_fixable": false,
+     "description": "Extract 1 duplicated code block (10 lines) into a shared module",
+     "note": "These clone groups share the same files, indicating a structural relationship; refactor together"
+    },
+    {
+     "type": "apply-suggestion",
+     "auto_fixable": false,
+     "description": "Extract shared function (10 lines) from dup_a.ts, dup_b.ts, dup_c.ts"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the duplicated code",
+     "comment": "// fallow-ignore-next-line code-duplication"
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "total_files": 4,
+  "files_with_clones": 3,
+  "total_lines": 41,
+  "duplicated_lines": 30,
+  "total_tokens": 697,
+  "duplicated_tokens": 308,
+  "clone_groups": 1,
+  "clone_families": 1,
+  "clone_instances": 3,
+  "duplication_percentage": 73.17073170731707
+ },
+ "clone_groups_shown": 1,
+ "clone_groups_omitted": 0,
+ "clone_families_shown": 1,
+ "clone_families_omitted": 0,
+ "workspace_diagnostics": [
+  {
+   "path": "node_modules",
+   "kind": "node-modules-missing",
+   "message": "'node_modules' does not exist. Package exports and conditional exports cannot be read, framework plugins that activate on an installed package stay inactive, and dependency classification degrades, so imports and dependencies can be misreported. Run npm install / pnpm install / yarn / bun install first.",
+   "degrades_analysis": true
+  }
+ ],
+ "next_steps": [
+  {
+   "id": "trace-clone",
+   "command": "fallow dupes --trace dup:6f87acd9",
+   "reason": "see sibling locations and an extract-function suggestion"
+  },
+  {
+   "id": "audit-changed",
+   "command": "fallow audit",
+   "reason": "gate only the files your branch changed (auto-detects the base)"
+  }
+ ],
+ "_meta": {
+  "telemetry": {
+   "analysis_run_id": "run_b5b23c8d90fd2a29"
+  }
+ }
+}

@@ -1,0 +1,478 @@
+{
+ "kind": "health",
+ "schema_version": 11,
+ "version": "3.31.0",
+ "elapsed_ms": 3,
+ "findings": [
+  {
+   "path": "src/index.ts",
+   "name": "complexOne",
+   "line": 2,
+   "col": 7,
+   "cyclomatic": 19,
+   "cognitive": 31,
+   "line_count": 7,
+   "param_count": 3,
+   "exceeded": "all",
+   "severity": "critical",
+   "effective_severity": "error",
+   "crap": 380.0,
+   "coverage_tier": "none",
+   "coverage_source": "estimated",
+   "actions": [
+    {
+     "type": "add-tests",
+     "auto_fixable": false,
+     "description": "Add test coverage for `complexOne` to lower its CRAP score (coverage reduces risk even without refactoring)",
+     "note": "CRAP = CC^2 * (1 - cov/100)^3 + CC; higher coverage is the fastest way to bring CRAP under threshold"
+    },
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `complexOne` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_a.ts",
+   "name": "fna",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "all",
+   "severity": "high",
+   "effective_severity": "error",
+   "crap": 90.0,
+   "coverage_tier": "none",
+   "coverage_source": "estimated",
+   "actions": [
+    {
+     "type": "add-tests",
+     "auto_fixable": false,
+     "description": "Add test coverage for `fna` to lower its CRAP score (coverage reduces risk even without refactoring)",
+     "note": "CRAP = CC^2 * (1 - cov/100)^3 + CC; higher coverage is the fastest way to bring CRAP under threshold"
+    },
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fna` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_b.ts",
+   "name": "fnb",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "all",
+   "severity": "high",
+   "effective_severity": "error",
+   "crap": 90.0,
+   "coverage_tier": "none",
+   "coverage_source": "estimated",
+   "actions": [
+    {
+     "type": "add-tests",
+     "auto_fixable": false,
+     "description": "Add test coverage for `fnb` to lower its CRAP score (coverage reduces risk even without refactoring)",
+     "note": "CRAP = CC^2 * (1 - cov/100)^3 + CC; higher coverage is the fastest way to bring CRAP under threshold"
+    },
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fnb` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_c.ts",
+   "name": "fnc",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "all",
+   "severity": "high",
+   "effective_severity": "error",
+   "crap": 90.0,
+   "coverage_tier": "none",
+   "coverage_source": "estimated",
+   "actions": [
+    {
+     "type": "add-tests",
+     "auto_fixable": false,
+     "description": "Add test coverage for `fnc` to lower its CRAP score (coverage reduces risk even without refactoring)",
+     "note": "CRAP = CC^2 * (1 - cov/100)^3 + CC; higher coverage is the fastest way to bring CRAP under threshold"
+    },
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fnc` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "files_analyzed": 6,
+  "functions_analyzed": 6,
+  "functions_above_threshold": 4,
+  "max_cyclomatic_threshold": 5,
+  "max_cognitive_threshold": 5,
+  "max_crap_threshold": 30.0,
+  "max_unit_size_threshold": 60,
+  "files_scored": 5,
+  "average_maintainability": 79.0,
+  "coverage_model": "static_estimated",
+  "coverage_source_consistency": "uniform",
+  "severity_critical_count": 1,
+  "severity_high_count": 3,
+  "severity_moderate_count": 0
+ },
+ "vital_signs": {
+  "dead_file_pct": 66.7,
+  "dead_export_pct": 25.0,
+  "avg_cyclomatic": 8.0,
+  "critical_complexity_pct": 0.0,
+  "p90_cyclomatic": 19,
+  "cyclomatic_population": {
+   "functions": {
+    "count": 6,
+    "sum": 48,
+    "max": 19
+   },
+   "modules": {
+    "count": 0,
+    "sum": 0,
+    "max": null
+   },
+   "templates": {
+    "count": 0,
+    "sum": 0,
+    "max": null
+   }
+  },
+  "duplication_pct": 73.2,
+  "hotspot_count": 0,
+  "hotspot_top_pct_count": 0,
+  "maintainability_avg": 79.0,
+  "maintainability_low_pct": 0.0,
+  "unused_dep_count": 1,
+  "unused_deps_per_k_files": 166.7,
+  "circular_dep_count": 0,
+  "circular_deps_per_k_files": 0.0,
+  "counts": {
+   "total_files": 6,
+   "total_exports": 8,
+   "dead_files": 4,
+   "dead_exports": 2,
+   "duplicated_lines": 30,
+   "total_lines": 51,
+   "files_scored": 5,
+   "total_deps": 0
+  },
+  "unit_size_profile": {
+   "low_risk": 100.0,
+   "medium_risk": 0.0,
+   "high_risk": 0.0,
+   "very_high_risk": 0.0
+  },
+  "functions_over_60_loc_per_k": 0.0,
+  "unit_interfacing_profile": {
+   "low_risk": 83.3,
+   "medium_risk": 16.7,
+   "high_risk": 0.0,
+   "very_high_risk": 0.0
+  },
+  "p95_fan_in": 1,
+  "coupling_high_pct": 0.0,
+  "total_loc": 51
+ },
+ "health_score": {
+  "formula_version": 2,
+  "score": 46.7,
+  "grade": "D",
+  "penalties": {
+   "dead_files": 13.3,
+   "dead_exports": 5.0,
+   "complexity": 0.0,
+   "p90_complexity": 0.0,
+   "maintainability": 0.0,
+   "hotspots": 0.0,
+   "unused_deps": 25.0,
+   "circular_deps": 0.0,
+   "unit_size": 0.0,
+   "coupling": 0.0,
+   "duplication": 10.0
+  }
+ },
+ "file_scores": [
+  {
+   "path": "src/index.ts",
+   "fan_in": 0,
+   "fan_out": 1,
+   "dead_code_ratio": 0.0,
+   "complexity_density": 2.11,
+   "maintainability_index": 85.8,
+   "total_cyclomatic": 19,
+   "total_cognitive": 31,
+   "function_count": 1,
+   "lines": 9,
+   "crap_max": 380.0,
+   "crap_above_threshold": 1
+  },
+  {
+   "path": "src/dup_a.ts",
+   "fan_in": 0,
+   "fan_out": 0,
+   "dead_code_ratio": 1.0,
+   "complexity_density": 0.75,
+   "maintainability_index": 74.6,
+   "total_cyclomatic": 9,
+   "total_cognitive": 17,
+   "function_count": 1,
+   "lines": 12,
+   "crap_max": 90.0,
+   "crap_above_threshold": 1
+  },
+  {
+   "path": "src/dup_b.ts",
+   "fan_in": 0,
+   "fan_out": 0,
+   "dead_code_ratio": 1.0,
+   "complexity_density": 0.75,
+   "maintainability_index": 74.6,
+   "total_cyclomatic": 9,
+   "total_cognitive": 17,
+   "function_count": 1,
+   "lines": 12,
+   "crap_max": 90.0,
+   "crap_above_threshold": 1
+  },
+  {
+   "path": "src/dup_c.ts",
+   "fan_in": 0,
+   "fan_out": 0,
+   "dead_code_ratio": 1.0,
+   "complexity_density": 0.75,
+   "maintainability_index": 74.6,
+   "total_cyclomatic": 9,
+   "total_cognitive": 17,
+   "function_count": 1,
+   "lines": 12,
+   "crap_max": 90.0,
+   "crap_above_threshold": 1
+  },
+  {
+   "path": "src/lib.ts",
+   "fan_in": 1,
+   "fan_out": 0,
+   "dead_code_ratio": 0.67,
+   "complexity_density": 0.5,
+   "maintainability_index": 85.4,
+   "total_cyclomatic": 2,
+   "total_cognitive": 0,
+   "function_count": 2,
+   "lines": 4,
+   "crap_max": 2.0,
+   "crap_above_threshold": 0
+  }
+ ],
+ "targets": [
+  {
+   "path": "src/lib.ts",
+   "priority": 31.4,
+   "efficiency": 31.4,
+   "recommendation": "Remove 2 unused exports to reduce surface area (67% dead)",
+   "category": "remove_dead_code",
+   "effort": "low",
+   "confidence": "high",
+   "factors": [
+    {
+     "metric": "complexity_density",
+     "value": 0.5,
+     "threshold": 0.3,
+     "detail": "density 0.50 exceeds 0.3"
+    },
+    {
+     "metric": "dead_code_ratio",
+     "value": 0.67,
+     "threshold": 0.5,
+     "detail": "2 unused of 3 value exports (67%)"
+    }
+   ],
+   "evidence": {
+    "unused_exports": [
+     "unusedExport",
+     "unusedConst"
+    ],
+    "direct_callers": [
+     {
+      "path": "src/index.ts",
+      "symbols": [
+       {
+        "imported": "used",
+        "local": "used",
+        "type_only": false
+       }
+      ]
+     }
+    ]
+   },
+   "actions": [
+    {
+     "type": "apply-refactoring",
+     "auto_fixable": false,
+     "description": "Remove 2 unused exports to reduce surface area (67% dead)",
+     "category": "remove_dead_code"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress the underlying complexity finding",
+     "comment": "// fallow-ignore-next-line complexity"
+    }
+   ]
+  },
+  {
+   "path": "src/index.ts",
+   "priority": 31.3,
+   "efficiency": 31.3,
+   "recommendation": "Extract complexOne (cognitive: 31) in 9-LOC file into smaller functions",
+   "category": "extract_complex_functions",
+   "effort": "low",
+   "confidence": "high",
+   "factors": [
+    {
+     "metric": "complexity_density",
+     "value": 2.11,
+     "threshold": 0.3,
+     "detail": "density 2.11 exceeds 0.3"
+    },
+    {
+     "metric": "cognitive_complexity",
+     "value": 31.0,
+     "threshold": 30.0,
+     "detail": "complexOne has cognitive complexity 31"
+    }
+   ],
+   "evidence": {
+    "complex_functions": [
+     {
+      "name": "complexOne",
+      "line": 2,
+      "cognitive": 31
+     }
+    ]
+   },
+   "actions": [
+    {
+     "type": "apply-refactoring",
+     "auto_fixable": false,
+     "description": "Extract complexOne (cognitive: 31) in 9-LOC file into smaller functions",
+     "category": "extract_complex_functions"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress the underlying complexity finding",
+     "comment": "// fallow-ignore-next-line complexity"
+    }
+   ]
+  }
+ ],
+ "target_thresholds": {
+  "fan_in_p95": 5.0,
+  "fan_in_p75": 3.0,
+  "fan_out_p95": 8.0,
+  "fan_out_p90": 5
+ },
+ "gate_outcomes": {
+  "health-findings": {
+   "status": "fail",
+   "enforced": true
+  }
+ },
+ "workspace_diagnostics": [
+  {
+   "path": "node_modules",
+   "kind": "node-modules-missing",
+   "message": "'node_modules' does not exist. Package exports and conditional exports cannot be read, framework plugins that activate on an installed package stay inactive, and dependency classification degrades, so imports and dependencies can be misreported. Run npm install / pnpm install / yarn / bun install first.",
+   "degrades_analysis": true
+  },
+  {
+   "path": ".",
+   "kind": "boundaries-not-configured",
+   "message": "No architecture boundaries are configured, so the boundary detector did not run and its violation counts are zero because nothing was measured. Add `boundaries` to the config, or set `boundary-violation` to off to state that the check is not wanted."
+  },
+  {
+   "path": ".",
+   "kind": "rule-packs-not-configured",
+   "message": "No rule packs are configured, so the policy detector did not run and its violation counts are zero because nothing was measured. Add `rulePacks` to the config, or set `policy-violation` to off to state that the check is not wanted."
+  },
+  {
+   "path": ".",
+   "kind": "hotspots-skipped",
+   "cause": "no-commits",
+   "message": "Hotspot analysis was skipped because the current branch has no commits yet, so the hotspots, churn and ownership sections report nothing rather than zero. Commit the project to give churn a history, or pass --churn-file with exported change history.",
+   "degrades_analysis": true
+  }
+ ],
+ "next_steps": [
+  {
+   "id": "complexity-breakdown",
+   "command": "fallow health --complexity-breakdown",
+   "reason": "see per-decision-point contributions for a hotspot"
+  },
+  {
+   "id": "audit-changed",
+   "command": "fallow audit",
+   "reason": "gate only the files your branch changed (auto-detects the base)"
+  }
+ ],
+ "_meta": {
+  "telemetry": {
+   "analysis_run_id": "run_aa93ee634f86a8fd"
+  }
+ }
+}

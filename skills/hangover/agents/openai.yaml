@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hangover"
+  short_description: "Rehabilitate codebases without changing behavior"
+  default_prompt: "Use $hangover to run a behavior-preserving simplification pass on this repository."

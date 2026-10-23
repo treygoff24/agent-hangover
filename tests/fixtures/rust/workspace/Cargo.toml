@@ -1,0 +1,10 @@
+[workspace]
+members = ["crates/*"]
+exclude = ["crates/ignored"]
+resolver = "2"
+
+[workspace.package]
+publish = false
+
+[workspace.dependencies]
+ws_core = { path = "crates/ws_core" }

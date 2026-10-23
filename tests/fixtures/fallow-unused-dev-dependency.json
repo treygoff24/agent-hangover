@@ -1,0 +1,6 @@
+{
+  "summary": {"unused_dependencies": 3},
+  "unused_dependencies": [{"package_name": "unused-production", "location": "dependencies", "path": "package.json"}],
+  "unused_dev_dependencies": [{"package_name": "unused-development", "location": "devDependencies", "path": "package.json"}],
+  "unused_optional_dependencies": [{"package_name": "unused-optional", "location": "optionalDependencies", "path": "package.json"}]
+}

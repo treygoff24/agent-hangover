@@ -1,0 +1,39 @@
+{
+  "name": "agent-hangover",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/treygoff24/agent-hangover"
+  },
+  "homepage": "https://github.com/treygoff24/agent-hangover",
+  "bugs": {
+    "url": "https://github.com/treygoff24/agent-hangover/issues"
+  },
+  "version": "0.1.0",
+  "description": "Behavior-preserving, agentic codebase simplification harness",
+  "license": "MIT",
+  "bin": {
+    "hangover": "bin/hangover",
+    "agent-hangover": "bin/hangover"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "bin/hangover",
+    "src/hangover/*.py",
+    "schemas/",
+    "prompts/",
+    "skills/",
+    "docs/command-review-runner.md",
+    "docs/examples/"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "python3 -m compileall -q src tests && PYTHONPATH=src python3 -m unittest discover -s tests -v"
+  },
+  "dependencies": {
+    "@ast-grep/cli": "0.50.0",
+    "fallow": "3.31.0",
+    "jscpd": "5.4.1"
+  }
+}

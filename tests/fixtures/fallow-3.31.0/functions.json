@@ -1,0 +1,339 @@
+{
+ "kind": "health",
+ "schema_version": 11,
+ "version": "3.31.0",
+ "elapsed_ms": 0,
+ "findings": [
+  {
+   "path": "src/index.ts",
+   "name": "complexOne",
+   "line": 2,
+   "col": 7,
+   "cyclomatic": 19,
+   "cognitive": 31,
+   "line_count": 7,
+   "param_count": 3,
+   "exceeded": "both",
+   "severity": "high",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `complexOne` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_a.ts",
+   "name": "fna",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "both",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fna` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_b.ts",
+   "name": "fnb",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "both",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fnb` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/dup_c.ts",
+   "name": "fnc",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 9,
+   "cognitive": 17,
+   "line_count": 11,
+   "param_count": 2,
+   "exceeded": "both",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `fnc` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/amb.ts",
+   "name": "handler",
+   "line": 1,
+   "col": 19,
+   "cyclomatic": 1,
+   "cognitive": 0,
+   "line_count": 1,
+   "param_count": 0,
+   "exceeded": "cyclomatic",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `handler` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/amb.ts",
+   "name": "handler",
+   "line": 2,
+   "col": 19,
+   "cyclomatic": 1,
+   "cognitive": 0,
+   "line_count": 1,
+   "param_count": 0,
+   "exceeded": "cyclomatic",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `handler` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/amb.ts",
+   "name": "handler2",
+   "line": 3,
+   "col": 28,
+   "cyclomatic": 1,
+   "cognitive": 0,
+   "line_count": 1,
+   "param_count": 0,
+   "exceeded": "cyclomatic",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `handler2` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/lib.ts",
+   "name": "used",
+   "line": 1,
+   "col": 7,
+   "cyclomatic": 1,
+   "cognitive": 0,
+   "line_count": 1,
+   "param_count": 0,
+   "exceeded": "cyclomatic",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `used` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  },
+  {
+   "path": "src/lib.ts",
+   "name": "unusedExport",
+   "line": 2,
+   "col": 7,
+   "cyclomatic": 1,
+   "cognitive": 0,
+   "line_count": 1,
+   "param_count": 0,
+   "exceeded": "cyclomatic",
+   "severity": "moderate",
+   "effective_severity": "error",
+   "actions": [
+    {
+     "type": "refactor-function",
+     "auto_fixable": false,
+     "description": "Refactor `unusedExport` to reduce complexity (extract helper functions, simplify branching)",
+     "note": "Split into smaller functions with single responsibilities. Splitting relocates branching, so it lowers this function's score without lowering the total"
+    },
+    {
+     "type": "suppress-line",
+     "auto_fixable": false,
+     "description": "Suppress with an inline comment above the function declaration",
+     "comment": "// fallow-ignore-next-line complexity",
+     "placement": "above-function-declaration"
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "files_analyzed": 7,
+  "functions_analyzed": 9,
+  "functions_above_threshold": 9,
+  "max_cyclomatic_threshold": 0,
+  "max_cognitive_threshold": 0,
+  "max_crap_threshold": 0.0,
+  "max_unit_size_threshold": 60,
+  "severity_critical_count": 0,
+  "severity_high_count": 1,
+  "severity_moderate_count": 8
+ },
+ "vital_signs": {
+  "avg_cyclomatic": 5.7,
+  "critical_complexity_pct": 0.0,
+  "p90_cyclomatic": 19,
+  "cyclomatic_population": {
+   "functions": {
+    "count": 9,
+    "sum": 51,
+    "max": 19
+   },
+   "modules": {
+    "count": 0,
+    "sum": 0,
+    "max": null
+   },
+   "templates": {
+    "count": 0,
+    "sum": 0,
+    "max": null
+   }
+  },
+  "unit_size_profile": {
+   "low_risk": 100.0,
+   "medium_risk": 0.0,
+   "high_risk": 0.0,
+   "very_high_risk": 0.0
+  },
+  "functions_over_60_loc_per_k": 0.0,
+  "unit_interfacing_profile": {
+   "low_risk": 88.9,
+   "medium_risk": 11.1,
+   "high_risk": 0.0,
+   "very_high_risk": 0.0
+  },
+  "total_loc": 55
+ },
+ "gate_outcomes": {
+  "health-findings": {
+   "status": "fail",
+   "enforced": true
+  }
+ },
+ "workspace_diagnostics": [
+  {
+   "path": "node_modules",
+   "kind": "node-modules-missing",
+   "message": "'node_modules' does not exist. Package exports and conditional exports cannot be read, framework plugins that activate on an installed package stay inactive, and dependency classification degrades, so imports and dependencies can be misreported. Run npm install / pnpm install / yarn / bun install first.",
+   "degrades_analysis": true
+  }
+ ],
+ "next_steps": [
+  {
+   "id": "complexity-breakdown",
+   "command": "fallow health --complexity-breakdown",
+   "reason": "see per-decision-point contributions for a hotspot"
+  },
+  {
+   "id": "audit-changed",
+   "command": "fallow audit",
+   "reason": "gate only the files your branch changed (auto-detects the base)"
+  }
+ ],
+ "_meta": {
+  "telemetry": {
+   "analysis_run_id": "run_0c13656e4f3bb0d3"
+  }
+ }
+}

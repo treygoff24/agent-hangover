@@ -1,0 +1,11 @@
+[package]
+name = "ws_app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ws_core = { workspace = true }
+ws_helper = { path = "../../tools/helper" }
+
+[dev-dependencies]
+renamed_core = { path = "../ws_core", package = "ws_core" }

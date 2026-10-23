@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# hangover's launcher. `npm install -g` links it onto PATH; a clone links it by hand. Either way the
+# package root is the directory above this file once symlinks are resolved: src/ holds the Python
+# package, node_modules/.bin the pinned analyzers. Kept parseable by old Pythons so that an old
+# `python3` gets a sentence, not a traceback.
+#
+# The interpreter is the first `python3` on PATH, as for any `#!/usr/bin/env python3` script: the
+# operator's PATH chooses it. What that interpreter imports is not left to the environment: the
+# launcher re-runs itself in isolated mode (`python3 -I`: PYTHONPATH and every other PYTHON*
+# variable, the user site directory, and the script's and current directory are off the import
+# path), then puts its own src/ first. Before that only `sys` and `os` are imported, and both are
+# loaded (built in or frozen) before any path entry is consulted.
+import sys
+
+if sys.version_info < (3, 11):
+    sys.stderr.write(
+        "hangover: needs Python 3.11 or newer, but `python3` is %d.%d (%s); put a newer python3 first on PATH\n"
+        % (sys.version_info[0], sys.version_info[1], sys.executable)
+    )
+    raise SystemExit(2)
+
+import os
+
+if not sys.flags.isolated:
+    if not sys.executable:
+        sys.stderr.write("hangover: cannot tell which python3 is running, so cannot re-run it isolated (-I)\n")
+        raise SystemExit(2)
+    os.execv(sys.executable, [sys.executable, "-I", os.path.abspath(__file__)] + sys.argv[1:])
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "src"))
+
+from hangover.cli import main
+
+raise SystemExit(main())

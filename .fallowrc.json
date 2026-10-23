@@ -1,0 +1,4 @@
+{
+  "ignorePatterns": ["tests/fixtures/**"],
+  "ignoreDependencies": ["@ast-grep/cli"]
+}
