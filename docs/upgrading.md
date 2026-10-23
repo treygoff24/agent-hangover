@@ -37,7 +37,8 @@ its repository path or owner binding.
    python3 "$(npm root -g)/agent-hangover/scripts/migrate-state.py" /path/to/repository --apply
    ```
 
-   The utility first copies the state to a sibling backup named
+   The utility first copies the campaign records it can migrate to a sibling
+   backup named
    `.hangover.pre-migrate-<timestamp>`, then changes the files in place. It
    preserves the state directory itself because its owner marker is bound
    to that directory. Keep the printed backup path; it contains private
@@ -47,6 +48,11 @@ its repository path or owner binding.
    Check that the backlog and current batch are present and IDs start with
    `hang-`. Run the utility again without `--apply`; it should report
    `nothing to migrate`. Keep the backup until you have checked the result.
+
+The backup covers `config.json`, `state.json`, its lock, the owner marker,
+`gate-proofs.json`, and the `runs/` and `fixes/` trees when present. Other
+scratch and cache directories are left alone and are not backed up. Raw
+logs and captures are retained without reading or rewriting their contents.
 
 The utility changes card references in state, snapshots and fix packets,
 renames fix directories, and updates a recognized old owner marker. It does

@@ -20,6 +20,7 @@ class MigrationTests(unittest.TestCase):
         self.repo = scratch_repo(self)
         self.root = self.repo / ".hangover"
         self.root.mkdir()
+        (self.root / "runs").mkdir()
         self.marker = {"tool": "deslop", "repo": str(self.repo),
                        "device": self.root.stat().st_dev, "inode": self.root.stat().st_ino}
         (self.root / "owner").write_text(json.dumps(self.marker))
@@ -36,7 +37,7 @@ class MigrationTests(unittest.TestCase):
         fixes.mkdir(parents=True)
         (fixes / "notes.md").write_text(f"Keep {OLD}\n")
         # U+2028 is valid in a JSON string; it must not be split as a record delimiter.
-        (self.root / "events.jsonl").write_text(json.dumps({"id": OLD, "note": "one\u2028two"}, ensure_ascii=False) + "\n")
+        (self.root / "runs" / "events.jsonl").write_text(json.dumps({"id": OLD, "note": "one\u2028two"}, ensure_ascii=False) + "\n")
         before = (self.root / "state.json").read_bytes()
         dry = self.invoke()
         self.assertEqual(0, dry.returncode, dry.stderr)
@@ -51,7 +52,7 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(self.card["history"], state["issues"][NEW]["history"])
         self.assertEqual(str(self.root / "fixes" / NEW), state["issues"][NEW]["fix_dir"])
         self.assertEqual(f"Keep {NEW}\n", (self.root / "fixes" / NEW / "notes.md").read_text())
-        self.assertEqual("one\u2028two", json.loads((self.root / "events.jsonl").read_text())["note"])
+        self.assertEqual("one\u2028two", json.loads((self.root / "runs" / "events.jsonl").read_text())["note"])
         self.assertTrue(state_owned(self.repo))
         owner = json.loads((self.root / "owner").read_text())
         self.assertEqual(self.marker["inode"], owner["inode"])
@@ -63,6 +64,36 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(0, again.returncode, again.stderr)
         self.assertIn("nothing to migrate", again.stdout)
         self.assertEqual(backups, list(self.repo.glob(".hangover.pre-migrate-*")))
+
+    def test_large_raw_log_does_not_block_preview(self):
+        runs = self.root / "runs" / "old-run"
+        runs.mkdir(parents=True)
+        log = runs / "checks.stdout"
+        with log.open("wb") as handle:
+            handle.write(OLD.encode())
+            handle.truncate(64 * 1024 * 1024 + 1)
+        result = self.invoke()
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(64 * 1024 * 1024 + 1, log.stat().st_size)
+        with log.open("rb") as handle:
+            self.assertEqual(OLD.encode(), handle.read(len(OLD)))
+        self.assertFalse(list(self.repo.glob(".hangover.pre-migrate-*")))
+
+    def test_scratch_checkout_is_untouched_and_not_backed_up(self):
+        scratch = self.root / "rust-audit-base"
+        scratch.mkdir()
+        external = self.repo / "private-canary"
+        external.write_text("never change this")
+        (scratch / "linked.json").symlink_to(external)
+        (scratch / "state.json").write_text("not campaign JSON")
+        result = self.invoke("--apply")
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("never change this", external.read_text())
+        self.assertTrue((scratch / "linked.json").is_symlink())
+        self.assertEqual("not campaign JSON", (scratch / "state.json").read_text())
+        backup, = self.repo.glob(".hangover.pre-migrate-*")
+        self.assertFalse((backup / "rust-audit-base").exists())
+        self.assertIn(NEW, (self.root / "state.json").read_text())
 
     def test_missing_marker_gains_no_trust(self):
         owner = self.root / "owner"
@@ -85,7 +116,7 @@ class MigrationTests(unittest.TestCase):
         external.write_text(json.dumps({"id": OLD}))
         for kind in ("symlink", "hardlink", "directory", "fifo", "lock"):
             with self.subTest(kind=kind):
-                path = self.root / ("state.json.lock" if kind == "lock" else "linked.json")
+                path = self.root / "state.json.lock" if kind == "lock" else self.root / "runs" / "linked.json"
                 if kind in ("symlink", "lock"):
                     path.symlink_to(external)
                 elif kind == "hardlink":
@@ -114,14 +145,14 @@ class MigrationTests(unittest.TestCase):
     def test_rejects_invalid_json_and_collisions_before_writes(self):
         for content in ("{", json.dumps({OLD: 1, NEW: 2})):
             with self.subTest(content=content):
-                (self.root / "extra.json").write_text(content)
+                (self.root / "runs" / "extra.json").write_text(content)
                 result = self.invoke("--apply")
                 self.assertEqual(2, result.returncode, result.stdout + result.stderr)
                 self.assertIn(OLD, (self.root / "state.json").read_text())
                 self.assertFalse(list(self.repo.glob(".hangover.pre-migrate-*")))
-        (self.root / "extra.json").unlink()
-        (self.root / OLD).mkdir()
-        (self.root / NEW).mkdir()
+        (self.root / "runs" / "extra.json").unlink()
+        (self.root / "runs" / OLD).mkdir()
+        (self.root / "runs" / NEW).mkdir()
         self.assertEqual(2, self.invoke("--apply").returncode)
         self.assertFalse(list(self.repo.glob(".hangover.pre-migrate-*")))
 

@@ -17,7 +17,9 @@ into `.deslop/`. hangover 0.1.1 accepts none of these. This script rewrites them
   * the Rust policy file name `.deslop-rust.json` -> `.hangover-rust.json` and the analysis
     label `deslop-rust N` -> `hangover-rust N` inside recorded cards and snapshots.
 
-Raw tool output (logs, stdout/stderr captures, patches) is history and is not touched.
+Only config, state, owner, gate-proofs and the runs/ and fixes/ artifact trees are
+migrated and backed up. Audit checkouts and caches are left untouched. Raw tool output
+(logs, stdout/stderr captures, patches) is history: its content is never inspected or rewritten.
 
 Dry run by default: it prints what it would change. `--apply` writes, after copying the
 state directory to `<dir>.pre-migrate-<UTC timestamp>`. Files are rewritten in
@@ -61,10 +63,12 @@ OWNER_FILE = "owner"
 LOCK_FILE = "state.json.lock"
 OWNER_NOTE = ("hangover created or adopted this directory here; a copy elsewhere is not trusted "
               "by --no-checks until `hangover init` adopts it")
-OLD_PREFIX, NEW_PREFIX = "dslp-", "hang-"
+NEW_PREFIX = "hang-"
 CARD_ID = re.compile(r"(?<![0-9A-Za-z])dslp-(?=[0-9a-f]{10}(?![0-9A-Za-z]))")
 RUST_LABEL = re.compile(r"\bdeslop-rust (?=\d)")
 TEXT_SUFFIXES = {".md"}
+CAMPAIGN_FILES = {"config.json", "state.json", "state.json.lock", "owner", "gate-proofs.json"}
+CAMPAIGN_DIRS = {"runs", "fixes"}
 
 # Load the trusted tool's own helpers, never modules from the target repository.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -133,7 +137,8 @@ def read_text(path: Path) -> str:
     regular_file(path)
     # Applies the same no-follow, no-hard-link policy as repository reads.
     value = read_repo_file(CAMPAIGN.parent,
-                           path.relative_to(CAMPAIGN.parent), purpose="campaign migration")
+                           path.relative_to(CAMPAIGN.parent),
+                           purpose=f"campaign migration file {path.relative_to(CAMPAIGN)}")
     if value is None:
         raise Refusal(f"missing campaign file: {path}")
     return value
@@ -204,13 +209,27 @@ def planned_owner(path: Path) -> tuple[str | None, str]:
     return json_text(updated), f"owner marker: tool deslop -> hangover; it {binding}"
 
 
+def campaign_tree(root: Path):
+    """Only campaign records and artifacts; audit checkouts and caches are not state."""
+    for name in CAMPAIGN_FILES:
+        if os.path.lexists(root / name):
+            regular_file(root / name)
+    for name in CAMPAIGN_DIRS:
+        if os.path.lexists(root / name) and not stat.S_ISDIR((root / name).lstat().st_mode):
+            raise Refusal(f"{root / name} is not a real directory")
+    for directory, dirnames, filenames in os.walk(root, topdown=True, followlinks=False):
+        if Path(directory) == root:
+            dirnames[:] = [name for name in dirnames if name in CAMPAIGN_DIRS]
+            filenames = [name for name in filenames if name in CAMPAIGN_FILES | CAMPAIGN_DIRS]
+        yield directory, dirnames, filenames
+
+
 def plan(root: Path, rewrite: Callable[[str], str]) -> tuple[dict[Path, str], list[tuple[Path, Path]], list[str]]:
     """File rewrites, path renames (deepest first) and notes, without writing anything."""
     rewrites: dict[Path, str] = {}
     renames: list[tuple[Path, Path]] = []
     notes: list[str] = []
-    untouched_with_ids = 0
-    for directory, dirnames, filenames in os.walk(root, topdown=False):
+    for directory, dirnames, filenames in reversed(list(campaign_tree(root))):
         base = Path(directory)
         for name in filenames:
             path = base / name
@@ -239,12 +258,6 @@ def plan(root: Path, rewrite: Callable[[str], str]) -> tuple[dict[Path, str], li
                 text = rewrite(original)
                 if text != original:
                     rewrites[path] = text
-            else:
-                try:
-                    if OLD_PREFIX in read_text(path):
-                        untouched_with_ids += 1
-                except UnicodeError:
-                    pass
         for name in dirnames:
             if not stat.S_ISDIR((base / name).lstat().st_mode):
                 raise Refusal(f"{base / name} is not a real directory")
@@ -255,9 +268,6 @@ def plan(root: Path, rewrite: Callable[[str], str]) -> tuple[dict[Path, str], li
                 if os.path.lexists(destination):
                     raise Refusal(f"cannot rename {base / name}: {destination} already exists")
                 renames.append((base / name, destination))
-    if untouched_with_ids:
-        notes.append(f"{untouched_with_ids} raw output file(s) (logs, captures, patches) still mention "
-                     f"{OLD_PREFIX} IDs; they are history hangover does not parse and are left as they were")
     return rewrites, renames, notes
 
 
@@ -317,7 +327,7 @@ def main(argv: list[str] | None = None) -> int:
                               f"{', ...' if len(names) > 3 else ''}); that is not a local campaign, refusing")
 
         # Validate every entry before opening even the lock or configuration.
-        for directory, dirnames, filenames in os.walk(root, followlinks=False):
+        for directory, dirnames, filenames in campaign_tree(root):
             for name in dirnames:
                 if not stat.S_ISDIR((Path(directory) / name).lstat().st_mode):
                     raise Refusal(f"{Path(directory) / name} is not a real directory")
@@ -377,7 +387,9 @@ def main(argv: list[str] | None = None) -> int:
             backup = root.with_name(f"{root.name}.pre-migrate-{stamp}")
             if os.path.lexists(backup):
                 raise Refusal(f"{backup} already exists")
-            shutil.copytree(root, backup, symlinks=True)
+            shutil.copytree(root, backup, symlinks=True,
+                            ignore=lambda directory, names: [name for name in names
+                                if Path(directory) == root and name not in CAMPAIGN_FILES | CAMPAIGN_DIRS])
             print(f"backup: {backup}")
             print("  keep this private backup until you have checked the result; never commit it")
 
