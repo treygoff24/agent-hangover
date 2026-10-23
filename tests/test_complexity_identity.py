@@ -165,7 +165,7 @@ class ComplexityIdentityTests(unittest.TestCase):
         self.assertTrue({issue_id(item) for item in before}.isdisjoint({issue_id(item) for item in after}))
 
     def test_ambiguous_member_cannot_close_while_its_family_is_still_reported(self):
-        issue = {**legacy_finding(), "id": "dslp-aaaaaaaaaa",
+        issue = {**legacy_finding(), "id": "hang-aaaaaaaaaa",
                  "complexity_identity": {"family": ["src/handlers.ts", "handler"], "ambiguous": True}}
         snapshot = {"fallow": {"status": "completed"}, "fallow_comparison": {"comparable": True},
                     "complexity_families_seen": [["src/handlers.ts", "handler"]]}
@@ -446,7 +446,7 @@ class FunctionIdentityTests(unittest.TestCase):
         self.assertEqual("deferred", self.state["issues"][target]["status"])
         self.assertEqual(("deferred", legacy_first_seen),
                          (merged["pre_scan"][target]["status"], merged["pre_scan"][target]["first_seen"]))
-        issue = {"id": "dslp-fixed", "source": "fallow", "fix_started_at": "2999-01-01T00:00:00+00:00",
+        issue = {"id": "hang-fixed", "source": "fallow", "fix_started_at": "2999-01-01T00:00:00+00:00",
                  "fix_finding_ids": []}
         snapshot = {"fallow": {"status": "completed"}, "fallow_comparison": {"comparable": True},
                     "pre_scan_cards": merged["pre_scan"]}
@@ -463,7 +463,7 @@ class FunctionIdentityTests(unittest.TestCase):
         merged = self.scan(real_health(cyclomatic=25, cognitive=30), "after")
         snapshot = {"fallow": {"status": "completed"}, "fallow_comparison": {"comparable": True},
                     "pre_scan_cards": merged["pre_scan"]}
-        issue = {"id": "dslp-fixed", "source": "fallow", "fix_started_at": "2500-01-01T00:00:00+00:00",
+        issue = {"id": "hang-fixed", "source": "fallow", "fix_started_at": "2500-01-01T00:00:00+00:00",
                  "fix_finding_ids": [i for i in merged["ids"] if i != target]}
         return target, _verification_blockers(snapshot, issue, merged["ids"], self.state["issues"])
 
@@ -485,7 +485,7 @@ class FunctionIdentityTests(unittest.TestCase):
         merged = self.scan(real_health(), "after")
         snapshot = {"fallow": {"status": "completed"}, "fallow_comparison": {"comparable": True},
                     "pre_scan_cards": merged["pre_scan"]}
-        issue = {"id": "dslp-fixed", "source": "fallow", "fix_started_at": "2026-01-01T00:00:00+00:00",
+        issue = {"id": "hang-fixed", "source": "fallow", "fix_started_at": "2026-01-01T00:00:00+00:00",
                  "fix_finding_ids": [i for i in merged["ids"] if i != self.one(merged)]}
         blockers = _verification_blockers(snapshot, issue, merged["ids"], self.state["issues"])
         self.assertIn("not previously tracked -> cyclomatic 19, cognitive 31", blockers[1])

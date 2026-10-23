@@ -20,12 +20,12 @@ def captured(name):
 
 
 FINDING_ID = captured("found")["data"]["finding_id_query"]["requested"][0]
-MEMBERS = {"dslp-member": {"finding_id": FINDING_ID}}
+MEMBERS = {"hang-member": {"finding_id": FINDING_ID}}
 
 
 class FindingQueryTests(unittest.TestCase):
     def result(self, name, seen=()):
-        return member_results(captured(name), MEMBERS, list(seen))["dslp-member"]
+        return member_results(captured(name), MEMBERS, list(seen))["hang-member"]
 
     def test_real_conclusive_missing_is_gone_with_fingerprint(self):
         result = self.result("missing")
@@ -35,19 +35,19 @@ class FindingQueryTests(unittest.TestCase):
                          result["analysis_fingerprint"])
 
     def test_real_found_is_still_present(self):
-        self.assertEqual("still present", self.result("found", ["dslp-member"])["status"])
+        self.assertEqual("still present", self.result("found", ["hang-member"])["status"])
 
     def test_found_under_a_repo_wide_reason_is_still_present(self):
         command = captured("found")
         query = command["data"]["finding_id_query"]
         query.update(conclusive=False, inconclusive_reasons=["production"])
-        self.assertEqual("still present", member_results(command, MEMBERS, ["dslp-member"])["dslp-member"]["status"])
-        self.assertEqual("unknown", member_results(command, MEMBERS, [])["dslp-member"]["status"])
+        self.assertEqual("still present", member_results(command, MEMBERS, ["hang-member"])["hang-member"]["status"])
+        self.assertEqual("unknown", member_results(command, MEMBERS, [])["hang-member"]["status"])
 
     def test_conclusive_answer_with_reasons_is_invalid(self):
         command = captured("missing")
         command["data"]["finding_id_query"]["inconclusive_reasons"] = ["production"]
-        self.assertEqual("unknown", member_results(command, MEMBERS, [])["dslp-member"]["status"])
+        self.assertEqual("unknown", member_results(command, MEMBERS, [])["hang-member"]["status"])
 
     def test_real_scoped_missing_is_unknown(self):
         result = self.result("inconclusive")
@@ -57,15 +57,15 @@ class FindingQueryTests(unittest.TestCase):
     def test_inconclusive_unfiltered_missing_is_unknown(self):
         command = captured("inconclusive")
         command["data"]["finding_id_query"]["filtered"] = []
-        self.assertEqual("unknown", member_results(command, MEMBERS, [])["dslp-member"]["status"])
+        self.assertEqual("unknown", member_results(command, MEMBERS, [])["hang-member"]["status"])
 
     def test_filtered_even_if_conclusive_is_unknown(self):
         command = captured("inconclusive")
         command["data"]["finding_id_query"]["conclusive"] = True
-        self.assertEqual("unknown", member_results(command, MEMBERS, [])["dslp-member"]["status"])
+        self.assertEqual("unknown", member_results(command, MEMBERS, [])["hang-member"]["status"])
 
     def test_full_scan_disagreement_blocks_in_both_directions(self):
-        for name, seen in (("missing", ["dslp-member"]), ("found", [])):
+        for name, seen in (("missing", ["hang-member"]), ("found", [])):
             with self.subTest(name=name):
                 result = self.result(name, seen)
                 self.assertEqual("unknown", result["status"])
@@ -74,10 +74,10 @@ class FindingQueryTests(unittest.TestCase):
     def test_rule_off_is_unknown_only_for_the_affected_member_rule(self):
         command = captured("missing")
         command["data"]["finding_id_query"].update(conclusive=False, inconclusive_reasons=["rule-off"])
-        members = {"dslp-member": {"finding_id": FINDING_ID, "category": "unused_files"}}
+        members = {"hang-member": {"finding_id": FINDING_ID, "category": "unused_files"}}
         for disabled, expected in (({"unused_files": "unused-files"}, "unknown"), ({}, "not applicable")):
             with self.subTest(disabled=disabled):
-                result = member_results(command, members, [], disabled)["dslp-member"]
+                result = member_results(command, members, [], disabled)["hang-member"]
                 self.assertEqual(expected, result["status"])
 
     def test_missing_malformed_or_failed_evidence_is_unknown(self):
@@ -93,7 +93,7 @@ class FindingQueryTests(unittest.TestCase):
         commands.append(failed)
         for command in commands:
             with self.subTest(command=command):
-                self.assertEqual("unknown", member_results(command, MEMBERS, [])["dslp-member"]["status"])
+                self.assertEqual("unknown", member_results(command, MEMBERS, [])["hang-member"]["status"])
 
 
 class FindingQueryFlowTests(unittest.TestCase):
@@ -192,7 +192,7 @@ class FindingQueryFlowTests(unittest.TestCase):
                 self.assertEqual(0, code)
                 self.assertEqual("not_applicable", self.latest()["dead_code_query"]["status"])
                 self.assertEqual(1, stderr.count("dead-code query: not_applicable"))
-                self.assertNotIn("dead-code dslp-", stderr)
+                self.assertNotIn("dead-code hang-", stderr)
         self.assertGreater(self.runs("test"), baseline_runs)
 
     def test_missing_query_evidence_still_blocks(self):

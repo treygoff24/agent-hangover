@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from hangover.model import (
+    ISSUE_ID,
     add_to_batch,
     begin_fix,
     focus_remediation,
@@ -88,6 +89,16 @@ def full_scan(**statuses: str) -> dict:
 
 
 class ModelTests(unittest.TestCase):
+    def test_card_ids_keep_their_fingerprint_digest_under_the_hang_prefix(self) -> None:
+        # Pinned literals: a campaign's cards keep their identities across releases, so the
+        # ten hex digits after the prefix must never change for the same fingerprint.
+        self.assertEqual("hang-22ff43e68a", issue_id(
+            {"fingerprint": ["fallow", "unused_exports", "src/format.js", "formatNameLegacy"]}))
+        self.assertEqual("hang-bd363caa1e", issue_id(
+            {"source": "review", "category": "naming", "title": "Rename x", "files": ["b.ts", "a.ts"]}))
+        self.assertTrue(ISSUE_ID.fullmatch(issue_id(finding("any claim"))))
+        self.assertIsNone(ISSUE_ID.fullmatch("dead-22ff43e68a"))
+
     def test_closed_duplicate_reimport_routes_to_its_recorded_canonical(self) -> None:
         state = new_state(Path("/synthetic"))
         first = subjective("Canonical wording")
@@ -204,16 +215,16 @@ class ModelTests(unittest.TestCase):
 
     def test_dedupe_apply_transfers_stronger_evidence_to_the_canonical_issue(self) -> None:
         state = new_state(Path("/synthetic"))
-        for identifier, claim in (("dslp-aaaaaaaaaa", subjective("First wording", evidence=["first"])),
-                                   ("dslp-bbbbbbbbbb", subjective("Second wording", evidence=["second"], priority="P0"))):
+        for identifier, claim in (("hang-aaaaaaaaaa", subjective("First wording", evidence=["first"])),
+                                   ("hang-bbbbbbbbbb", subjective("Second wording", evidence=["second"], priority="P0"))):
             state["issues"][identifier] = {**claim, "id": identifier, "status": "open",
                                             "first_seen": "first", "history": []}
         dedupe_open_subjective_issues(state, apply=True)
-        canonical = state["issues"]["dslp-aaaaaaaaaa"]
+        canonical = state["issues"]["hang-aaaaaaaaaa"]
         self.assertEqual("P0", canonical["priority"])
         self.assertEqual(["first", "second"], canonical["evidence"])
         self.assertEqual("P0", canonical["history"][-1]["finding"]["priority"])
-        self.assertEqual("closed", state["issues"]["dslp-bbbbbbbbbb"]["status"])
+        self.assertEqual("closed", state["issues"]["hang-bbbbbbbbbb"]["status"])
 
     def test_dedupe_does_not_equate_parent_or_absolute_paths_with_repo_paths(self) -> None:
         inside = subjective("Same claim", files=["src/parser.ts"], symbols=["parse"])
@@ -236,11 +247,11 @@ class ModelTests(unittest.TestCase):
 
     def test_dedupe_identical_claims_keeps_history_entries_well_formed(self) -> None:
         state = new_state(Path("/synthetic"))
-        for identifier in ("dslp-aaaaaaaaaa", "dslp-bbbbbbbbbb"):
+        for identifier in ("hang-aaaaaaaaaa", "hang-bbbbbbbbbb"):
             state["issues"][identifier] = {**subjective("Same claim"), "id": identifier,
                                             "status": "open", "first_seen": "first", "history": []}
         dedupe_open_subjective_issues(state, apply=True)
-        self.assertTrue(all(isinstance(event, dict) for event in state["issues"]["dslp-aaaaaaaaaa"]["history"]))
+        self.assertTrue(all(isinstance(event, dict) for event in state["issues"]["hang-aaaaaaaaaa"]["history"]))
 
     def test_distinct_same_file_review_concerns_are_not_duplicates(self) -> None:
         first = subjective("Simplify parsing", files=["src/parser.ts"], symbols=["parse"],
@@ -298,12 +309,12 @@ class ModelTests(unittest.TestCase):
 
     def test_dedupe_apply_keeps_overlap_only_suggestions_open(self) -> None:
         state = new_state(Path("/synthetic"))
-        for identifier, finding_value in (("dslp-aaaaaaaaaa", subjective("First scope")),
-                                           ("dslp-bbbbbbbbbb", subjective("Expanded scope", files=TEAM_FILES_WIDER))):
+        for identifier, finding_value in (("hang-aaaaaaaaaa", subjective("First scope")),
+                                           ("hang-bbbbbbbbbb", subjective("Expanded scope", files=TEAM_FILES_WIDER))):
             state["issues"][identifier] = {**finding_value, "id": identifier, "status": "open",
                                             "first_seen": "first", "history": []}
         dedupe_open_subjective_issues(state, apply=True)
-        self.assertEqual("open", state["issues"]["dslp-bbbbbbbbbb"]["status"])
+        self.assertEqual("open", state["issues"]["hang-bbbbbbbbbb"]["status"])
 
     def test_begin_fix_refuses_to_reset_an_active_attempt(self) -> None:
         state = new_state(Path("/synthetic"))
@@ -902,8 +913,8 @@ class ModelTests(unittest.TestCase):
                 files=list(TEAM_FILES),
                 symbols=list(TEAM_SYMBOLS),
             )
-            earlier_id = "dslp-aaaaaaaaaa"
-            later_id = "dslp-bbbbbbbbbb"
+            earlier_id = "hang-aaaaaaaaaa"
+            later_id = "hang-bbbbbbbbbb"
             state["issues"] = {
                 earlier_id: {
                     **earlier,
@@ -994,9 +1005,9 @@ class ModelTests(unittest.TestCase):
                     "last_seen": stamp,
                 }
                 for identifier, item, stamp in (
-                    ("dslp-aaaaaaaaaa", first, "2026-08-26T17:33:00+00:00"),
-                    ("dslp-bbbbbbbbbb", second, "2026-08-26T18:00:00+00:00"),
-                    ("dslp-cccccccccc", third, "2026-08-26T18:00:01+00:00"),
+                    ("hang-aaaaaaaaaa", first, "2026-08-26T17:33:00+00:00"),
+                    ("hang-bbbbbbbbbb", second, "2026-08-26T18:00:00+00:00"),
+                    ("hang-cccccccccc", third, "2026-08-26T18:00:01+00:00"),
                 )
             }
             self.assertTrue(subjective_related(third, second))
@@ -1006,8 +1017,8 @@ class ModelTests(unittest.TestCase):
             applied = dedupe_open_subjective_issues(state, apply=True)
 
             self.assertEqual(2, len(applied))
-            self.assertEqual("dslp-bbbbbbbbbb", applied[0]["duplicate"])
-            self.assertEqual("dslp-aaaaaaaaaa", applied[0]["canonical"])
+            self.assertEqual("hang-bbbbbbbbbb", applied[0]["duplicate"])
+            self.assertEqual("hang-aaaaaaaaaa", applied[0]["canonical"])
             self.assertTrue(all(pair["match"] == "overlap_only" for pair in applied))
             self.assertTrue(all(issue["status"] == "open" for issue in state["issues"].values()))
 
@@ -1087,7 +1098,7 @@ class OpenBatchTests(unittest.TestCase):
             add_to_batch(self.state, a, [c])
         self.start([d], branch="lane")
         with self.assertRaisesRegex(RuntimeError, "not a member of an open batch"):
-            add_to_batch(self.state, "dslp-0000000000", [d])
+            add_to_batch(self.state, "hang-0000000000", [d])
         with self.assertRaisesRegex(RuntimeError, "companions must be open"):
             add_to_batch(self.state, a, [d])
 

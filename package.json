@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/treygoff24/agent-hangover/issues"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Behavior-preserving, agentic codebase simplification harness",
   "license": "MIT",
   "bin": {
@@ -22,7 +22,8 @@
     "schemas/",
     "prompts/",
     "skills/",
-    "docs/"
+    "docs/",
+    "scripts/migrate-state.py"
   ],
   "engines": {
     "node": ">=22"

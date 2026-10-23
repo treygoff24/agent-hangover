@@ -31,6 +31,12 @@ Done when: the OS is macOS or Linux, and `python3`, `node` and `git` meet the ve
 
 ## 2. Install
 
+If the user already has campaigns, inspect the installed version first.
+An upgrade from 0.1.0 to 0.1.1 needs [state migration](upgrading.md) in each
+repository before any campaign command runs. Preserve the state and stop
+active campaign workers before the upgrade. The migration utility has a dry
+run and makes a backup before applying changes.
+
 hangover is not published to the npm registry. Install it from GitHub:
 
 ```bash

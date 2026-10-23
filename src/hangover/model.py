@@ -23,6 +23,9 @@ except ImportError:  # pragma: no cover - Windows fallback
 
 SCHEMA_VERSION = 1
 STATE_DIR = ".hangover"
+# Every card ID: this prefix, then the first 10 hex digits of the card fingerprint's digest.
+ISSUE_ID_PREFIX = "hang-"
+ISSUE_ID = re.compile(rf"{ISSUE_ID_PREFIX}[0-9a-f]{{10}}")
 OPEN_STATUSES = {"open", "reopened", "in_progress"}
 PRIORITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
 RISK_ORDER = {"low": 0, "medium": 1, "high": 2}
@@ -210,7 +213,7 @@ def issue_id(finding: dict[str, Any]) -> str:
             "title": finding.get("title"),
             "files": sorted(finding.get("files", [])),
         }
-    return f"dslp-{digest(fingerprint)[:10]}"
+    return f"{ISSUE_ID_PREFIX}{digest(fingerprint)[:10]}"
 
 
 def normalize_repo_path(path: str) -> str:

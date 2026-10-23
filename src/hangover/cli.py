@@ -38,6 +38,7 @@ from .evidence import (
 from .gates import _load as _gate_proofs, find_gate_proof, gate_key, invalidate_gate_proof, record_gate_proof
 from .finding_query import query_members
 from .model import (
+    ISSUE_ID,
     SCHEMA_VERSION,
     add_fix_notes,
     add_history,
@@ -142,7 +143,7 @@ from .audit_evidence import (
     audit_blockers as _audit_blockers, begin_audit, fallow_failed, rust_analysis_failed, record_audit_review, require_audit, seal_audit,
 )
 
-SAFE_ISSUE_ID = re.compile(r"dslp-[0-9a-f]{10}")
+SAFE_ISSUE_ID = ISSUE_ID
 SAFE_BRANCH = re.compile(r"[A-Za-z0-9_][A-Za-z0-9._/-]*")
 SAFE_RUN_ID = re.compile(r"[A-Za-z0-9-]+")
 REVIEW_ENV_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
@@ -207,32 +208,10 @@ def _review_settings(config: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-class LegacyStatePending(DriverError):
-    """The operator must choose migration or a fresh campaign before initialization."""
-
-
-def _legacy_state_hint(repo: Path, out: TextIO) -> bool:
-    # Inspect names only: legacy state is foreign input, never imported or adopted automatically.
-    if os.path.lexists(repo / ".deslop") and not os.path.lexists(repo / ".hangover"):
-        print("info: legacy .deslop state found; migrate your own state with `mv .deslop .hangover` "
-              "(a same-filesystem move preserves the owner marker), then update legacy configuration "
-              "paths; or use `hangover init --ignore-legacy` for a fresh campaign",
-              file=out)
-        return True
-    return False
-
-
-def _initialize(
-    repo: Path, force: bool = False, *, stream: TextIO | None = None, ignore_legacy: bool = False
-) -> None:
+def _initialize(repo: Path, force: bool = False, *, stream: TextIO | None = None) -> None:
     # A machine-facing caller owns stdout, so a command that initializes on
     # the way to its JSON result routes this prose to the stream it names.
     out = stream or sys.stdout
-    if _legacy_state_hint(repo, out) and not ignore_legacy:
-        raise LegacyStatePending(
-            "initialization blocked: choose legacy-state migration or `hangover init --ignore-legacy`",
-            next_action=command_line(repo, "init", "--ignore-legacy"),
-        )
     state_paths = paths(repo)
     fresh = force or not state_paths["config"].exists()
     # Everything init reads from the repository (its package.json, Makefile, gate script) is read
@@ -3950,8 +3929,6 @@ def _print_issue(issue: dict[str, Any]) -> None:
 
 
 def _doctor(repo: Path, as_json: bool = False) -> int:
-    _legacy_state_hint(repo, sys.stderr if as_json else sys.stdout)
-
     def version(command: list[str], fallback: list[str] | None = None) -> str | None:
         try:
             result = subprocess.run(
@@ -4185,8 +4162,6 @@ def parser() -> argparse.ArgumentParser:
 
     init = commands.add_parser("init", help="discover repository checks and create local state")
     init.add_argument("--force", action="store_true", help="refresh config after writing a backup")
-    init.add_argument("--ignore-legacy", action="store_true",
-                      help="create fresh state even when a legacy campaign awaits migration")
     init.add_argument(
         "--stages-from-gate", action="store_true",
         help="adopt the commands of a gate shell script as explicit ordered checks (your assertion; verify blocks if the script later changes)",
@@ -4454,7 +4429,7 @@ def _main(argv: list[str] | None = None) -> int:
             with no_execute_git(repo) if static else contextlib.nullcontext():
                 refuse_foreign_state(repo, static=static)
         if args.command == "init":
-            _initialize(repo, args.force, ignore_legacy=args.ignore_legacy)
+            _initialize(repo, args.force)
             return _adopt_gate_stages(repo) if args.stages_from_gate else 0
         if args.command == "run":
             return _run(repo, args.no_checks, args.no_review, quiet=args.quiet, runner=args.runner)
@@ -4599,12 +4574,6 @@ def _main(argv: list[str] | None = None) -> int:
         if args.command == "dedupe":
             return _dedupe(repo, args.apply, args.json)
         raise RuntimeError(f"unsupported command {args.command}")
-    except LegacyStatePending as exc:
-        print(f"hangover: {exc}", file=sys.stderr)
-        result = origin.result("blocked", blockers=[str(exc)], next_action=exc.next_action)
-        if as_json:
-            result.emit()
-        return result.exit_code
     except (RuntimeError, OSError) as exc:
         # One machine result per invocation, built from what this invocation
         # itself bound; the prose stays on stderr in both modes. An OSError is

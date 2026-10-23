@@ -107,7 +107,7 @@ class OpenBatchFlowTests(unittest.TestCase):
 
     def test_packet_applies_the_batch_membership_rules(self):
         self.assertEqual(0, self.run_main("fix", self.dead)[0])
-        for ids in ([self.dead], [self.also, self.also], ["dslp-0000000000"], ["nonsense"], []):
+        for ids in ([self.dead], [self.also, self.also], ["hang-0000000000"], ["nonsense"], []):
             with self.subTest(ids=ids):
                 self.assertEqual(2, self.run_main("packet", *ids)[0])
 

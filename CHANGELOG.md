@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 (2026-10-23)
+
+Removes the last traces of hangover's pre-release name.
+
+- Card IDs now start `hang-` instead of `dslp-`; the hash is unchanged.
+  Existing campaigns need the bundled migration utility before use with
+  0.1.1. It previews changes, backs up the state and preserves the backlog.
+  See [Upgrading an existing campaign](docs/upgrading.md).
+- Removed the handling for state left by the pre-release tool: `hangover init --ignore-legacy`, the notice `init` and `doctor` printed about it, and the owner marker's pre-release tool label. hangover reads only `.hangover/`.
+
 ## 0.1.0 (2026-10-23)
 
 The first public release.

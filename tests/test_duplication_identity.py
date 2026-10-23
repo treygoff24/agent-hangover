@@ -101,13 +101,13 @@ class DuplicationIdentityTests(unittest.TestCase):
         self.assertEqual('deferred', self.state['issues'][self.old]['status'])
         self.setUp()
         duplicate = copy.deepcopy(self.state['issues'][self.old])
-        duplicate['id'] = 'dslp-other'
-        self.state['issues']['dslp-other'] = duplicate
+        duplicate['id'] = 'hang-other'
+        self.state['issues']['hang-other'] = duplicate
         merged = self.merge(findings('new'))
         self.assertEqual('open', self.state['issues'][merged['ids'][0]]['status'])
         linked = self.state['issues'][merged['ids'][0]]['identity_from']
         self.assertEqual('obsolete', self.state['issues'][linked]['status'])
-        unlinked = next(i for i in (self.old, 'dslp-other') if i != linked)
+        unlinked = next(i for i in (self.old, 'hang-other') if i != linked)
         self.assertEqual('stale', self.state['issues'][unlinked]['status'])
 
     def test_distinct_exact_groups_can_share_one_instance(self):
@@ -205,7 +205,7 @@ class DuplicationHoldTests(unittest.TestCase):
         from hangover.cli import _verification_blockers
         started = '2999-01-01T00:00:00+00:00'  # after every card's first_seen
         merged = self.merge(findings('renamed-by-fallow'), 'complete')
-        issue = {'id': 'dslp-x', 'source': 'fallow', 'fix_started_at': started, 'fix_finding_ids': []}
+        issue = {'id': 'hang-x', 'source': 'fallow', 'fix_started_at': started, 'fix_finding_ids': []}
         snapshot = {'fallow': {'status': 'completed'}, 'fallow_comparison': {'comparable': True},
                     'pre_scan_cards': merged['pre_scan']}
         self.assertEqual([], [b for b in _verification_blockers(snapshot, issue, merged['ids'], self.state['issues'])

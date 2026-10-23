@@ -11,7 +11,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
-from .model import digest, write_json
+from .model import ISSUE_ID, digest, write_json
 from .finding_identity import assign_complexity_identities
 from .fallow_evidence import caveat_reasons, degrading_diagnostics, degrading_index, semantic_caveat
 from .repository import (MAX_CAPTURE_BYTES, captured_text, diagnostic_text, git_safe_environment,
@@ -1088,7 +1088,7 @@ def _feature_flag_findings(flags: dict[str, Any]) -> list[dict[str, Any]]:
     return findings
 
 
-_FINDING_ID = re.compile(r"dslp-[0-9a-f]{10}")
+_FINDING_ID = ISSUE_ID
 
 
 def _introduced_finding_dispositions(

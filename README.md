@@ -35,7 +35,7 @@ baseline: 20261023T145218Z-scan-4e7034
   test: passed (baseline)
   fallow: completed | mode syntactic | health 85.0 | dead 3 | clones 0
 issues: obsolete=0, open=3, stale=0
-next: dslp-9a2d94daa6 [P1] Unused export: formatNameLegacy in src/format.js
+next: hang-9a2d94daa6 [P1] Unused export: formatNameLegacy in src/format.js
 ```
 
 `--no-review` skips the model review; drop it once a reviewer is set up. In a checkout you do not trust, use `hangover run --no-checks --no-review` instead, which runs none of the repository's code (see [Trusted and untrusted checkouts](#trusted-and-untrusted-checkouts)).
@@ -47,8 +47,8 @@ A *campaign* is one repository's cleanup, kept in a local `.hangover/` directory
 ```bash
 hangover run                         # discover the gate, record a baseline, scan, review, build the backlog
 hangover next                        # pick the highest-priority card
-hangover fix dslp-9a2d94daa6         # lock a batch and print its fix packet; then you (or your agent) edit
-hangover verify --issue dslp-9a2d94daa6   # gate + analyzers + a fresh reviewer; closes the batch only if all pass
+hangover fix hang-9a2d94daa6         # lock a batch and print its fix packet; then you (or your agent) edit
+hangover verify --issue hang-9a2d94daa6   # gate + analyzers + a fresh reviewer; closes the batch only if all pass
 ```
 
 The *gate* is the repository's own checks (tests, types, lint, build), which `hangover init` finds in `package.json` scripts, a Makefile, Cargo or pytest, and writes to `.hangover/config.json` for you to read and edit. `hangover fix` changes no code: it prints a *fix packet*, the evidence plus the invariants the change must keep, for whoever makes the edit. `hangover verify` then runs the cheap checks first (`git diff --check`, the analyzers), the gate once, and a *fresh review*: a separate model run that sees only the diff and the evidence, never the backlog or earlier verdicts, and must agree that no behavior was deleted and no test weakened. A check that already failed at the baseline does not count against you if it still fails the same way; a new failure does.
@@ -169,6 +169,10 @@ ln -s "$PWD/bin/hangover" ~/.local/bin/hangover
 
 ### Update
 
+Existing 0.1.0 campaigns need a one-time state migration for 0.1.1. Stop
+campaign work and follow [the upgrade guide](docs/upgrading.md) before
+running campaign commands with the new version.
+
 ```bash
 npm install -g --allow-git=root --allow-scripts=@ast-grep/cli \
   git+https://github.com/treygoff24/agent-hangover.git
@@ -213,6 +217,7 @@ For a clone, remove the links you made (`~/.local/bin/hangover` and the skill li
 ## Documentation
 
 - [docs/agent-setup.md](docs/agent-setup.md): install and first run, written for an AI agent doing it for someone
+- [docs/upgrading.md](docs/upgrading.md): preserve an existing campaign when updating
 - [docs/workflow.md](docs/workflow.md): the fix loop, `audit`, gate staging and reuse, parallel worktrees, check discovery
 - [docs/trust-model.md](docs/trust-model.md): executing and static mode, file containment, shipped state, safety rules
 - [docs/review.md](docs/review.md): the reviewer contract, runners, configuration and fallbacks

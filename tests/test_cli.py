@@ -2175,7 +2175,7 @@ else:
         primary, companion = sorted(load_state(self.repo)["issues"])
         self.assertEqual(0, self.invoke("fix", primary, companion))
         mutate_state(self.repo, lambda state: state["issues"][primary].update(
-            waivers=[{"id": "dslp-aaaaaaaaaa", "reason": "old remediation", "at": "then"}]
+            waivers=[{"id": "hang-aaaaaaaaaa", "reason": "old remediation", "at": "then"}]
         ))
         self.assertEqual(0, self.invoke("fix", companion, "--release"))
         state = load_state(self.repo)
@@ -2194,7 +2194,7 @@ else:
         primary, companion = sorted(load_state(self.repo)["issues"])
         self.assertEqual(0, self.invoke("fix", primary, companion))
         before = paths(self.repo)["state"].read_bytes()
-        for arguments in (("--release",), ("--release", primary, "dslp-aaaaaaaaaa")):
+        for arguments in (("--release",), ("--release", primary, "hang-aaaaaaaaaa")):
             self.assertEqual(2, self.invoke("fix", *arguments))
             self.assertEqual(before, paths(self.repo)["state"].read_bytes())
         self.assertEqual(0, self.invoke("fix", "--release", primary, companion))
@@ -2414,7 +2414,7 @@ else:
                     "reason": "resolved Fallow config changed",
                 },
             },
-            {"id": "dslp-aaaaaaaaaa", "source": "fallow"},
+            {"id": "hang-aaaaaaaaaa", "source": "fallow"},
             [],
         )
 
@@ -2439,7 +2439,7 @@ else:
                     ),
                 },
             },
-            {"id": "dslp-aaaaaaaaaa", "source": "fallow"},
+            {"id": "hang-aaaaaaaaaa", "source": "fallow"},
             [],
         )
 
@@ -2946,23 +2946,23 @@ else:
         payload = json.loads(stdout.getvalue())
         self.assertTrue(payload["dry_run"])
         self.assertEqual(1, payload["count"])
-        self.assertEqual("dslp-bbbbbbbbbb", payload["pairs"][0]["duplicate"])
-        self.assertEqual("dslp-aaaaaaaaaa", payload["pairs"][0]["canonical"])
+        self.assertEqual("hang-bbbbbbbbbb", payload["pairs"][0]["duplicate"])
+        self.assertEqual("hang-aaaaaaaaaa", payload["pairs"][0]["canonical"])
         state = load_state(self.repo)
-        self.assertEqual("open", state["issues"]["dslp-aaaaaaaaaa"]["status"])
-        self.assertEqual("open", state["issues"]["dslp-bbbbbbbbbb"]["status"])
+        self.assertEqual("open", state["issues"]["hang-aaaaaaaaaa"]["status"])
+        self.assertEqual("open", state["issues"]["hang-bbbbbbbbbb"]["status"])
 
     def test_dedupe_apply_reports_overlap_without_claiming_a_close(self) -> None:
         self.assertEqual(0, self.invoke("init"))
         state = load_state(self.repo)
         state["issues"] = _duplicate_backlog()
-        state["issues"]["dslp-bbbbbbbbbb"]["files"].append("src/extra.ts")
+        state["issues"]["hang-bbbbbbbbbb"]["files"].append("src/extra.ts")
         save_state(self.repo, state)
         stdout = StringIO()
         with redirect_stdout(stdout), redirect_stderr(StringIO()):
             self.assertEqual(0, main(["--repo", str(self.repo), "dedupe", "--apply"]))
         self.assertIn("closed 0 duplicate issue(s); 1 overlap suggestion(s) kept open", stdout.getvalue())
-        self.assertEqual("open", load_state(self.repo)["issues"]["dslp-bbbbbbbbbb"]["status"])
+        self.assertEqual("open", load_state(self.repo)["issues"]["hang-bbbbbbbbbb"]["status"])
 
     def test_dedupe_apply_closes_later_issue_as_duplicate_of_earlier(self) -> None:
         self.assertEqual(0, self.invoke("init"))
@@ -2978,15 +2978,15 @@ else:
         payload = json.loads(stdout.getvalue())
         self.assertFalse(payload["dry_run"])
         state = load_state(self.repo)
-        self.assertEqual("open", state["issues"]["dslp-aaaaaaaaaa"]["status"])
-        self.assertEqual("closed", state["issues"]["dslp-bbbbbbbbbb"]["status"])
+        self.assertEqual("open", state["issues"]["hang-aaaaaaaaaa"]["status"])
+        self.assertEqual("closed", state["issues"]["hang-bbbbbbbbbb"]["status"])
         self.assertEqual(
             "closed_duplicate",
-            state["issues"]["dslp-bbbbbbbbbb"]["history"][-1]["event"],
+            state["issues"]["hang-bbbbbbbbbb"]["history"][-1]["event"],
         )
         self.assertEqual(
-            "dslp-aaaaaaaaaa",
-            state["issues"]["dslp-bbbbbbbbbb"]["history"][-1]["of"],
+            "hang-aaaaaaaaaa",
+            state["issues"]["hang-bbbbbbbbbb"]["history"][-1]["of"],
         )
 
     def json_invoke(self, *arguments: str) -> dict:
@@ -3068,12 +3068,12 @@ else:
         self.assertEqual("list", payload["command"])
         self.assertEqual("ready", payload["state"])
         self.assertEqual(
-            ["dslp-1111111111"], [item["id"] for item in payload["data"]["issues"]]
+            ["hang-1111111111"], [item["id"] for item in payload["data"]["issues"]]
         )
         self.assertEqual(1, payload["data"]["count"])
         self.assertEqual(3, payload["data"]["total"])
         self.assertEqual({"source": ["fallow"]}, payload["data"]["filters"])
-        self.assertEqual(self.action("fix", "dslp-1111111111"), payload["next_action"])
+        self.assertEqual(self.action("fix", "hang-1111111111"), payload["next_action"])
 
     def test_list_json_filters_by_category_and_status_together(self) -> None:
         self._filter_backlog()
@@ -3083,7 +3083,7 @@ else:
         )
 
         self.assertEqual(
-            ["dslp-2222222222"], [item["id"] for item in payload["data"]["issues"]]
+            ["hang-2222222222"], [item["id"] for item in payload["data"]["issues"]]
         )
 
     def test_list_json_filters_by_file_path_and_directory_prefix(self) -> None:
@@ -3091,7 +3091,7 @@ else:
 
         exact = self.json_invoke("list", "--json", "--file", "src/a.ts")
         self.assertEqual(
-            ["dslp-2222222222", "dslp-3333333333"],
+            ["hang-2222222222", "hang-3333333333"],
             sorted(item["id"] for item in exact["data"]["issues"]),
         )
 
@@ -3108,7 +3108,7 @@ else:
         self.assertEqual(0, self.rc)
         self.assertEqual("no_open_work", payload["state"])
         self.assertEqual(
-            ["dslp-3333333333"], [item["id"] for item in payload["data"]["issues"]]
+            ["hang-3333333333"], [item["id"] for item in payload["data"]["issues"]]
         )
         self.assertIsNone(payload["issue_id"])
 
@@ -3142,8 +3142,8 @@ else:
             rc = main(["--repo", str(self.repo), "list", "--source", "fallow"])
 
         self.assertEqual(0, rc)
-        self.assertIn("dslp-1111111111", stdout.getvalue())
-        self.assertNotIn("dslp-2222222222", stdout.getvalue())
+        self.assertIn("hang-1111111111", stdout.getvalue())
+        self.assertNotIn("hang-2222222222", stdout.getvalue())
 
     def test_list_never_writes_campaign_state(self) -> None:
         self._filter_backlog()
@@ -3548,7 +3548,7 @@ else:
                 "complexity_families_seen": [["src/handlers.ts", "handler"]],
             },
             {
-                "id": "dslp-aaaaaaaaaa",
+                "id": "hang-aaaaaaaaaa",
                 "source": "fallow",
                 "complexity_identity": {
                     "ambiguous": True,
@@ -3560,7 +3560,7 @@ else:
 
         self.assertEqual(
             [
-                "dslp-aaaaaaaaaa has an ambiguous complexity identity and its family "
+                "hang-aaaaaaaaaa has an ambiguous complexity identity and its family "
                 "still has same-name findings; release/reselect it or address the "
                 "whole family"
             ],
@@ -4001,15 +4001,15 @@ else:
         self._preview_backlog()
 
         payload = self.json_invoke(
-            "preview", "--json", "dslp-aaaa000001", "dslp-aaaa000002"
+            "preview", "--json", "hang-aaaa000001", "hang-aaaa000002"
         )
 
         self.assertEqual(0, self.rc)
         self.assertEqual("preview", payload["command"])
         self.assertEqual("ready", payload["state"])
-        self.assertEqual(["dslp-aaaa000001", "dslp-aaaa000002"], payload["batch"])
+        self.assertEqual(["hang-aaaa000001", "hang-aaaa000002"], payload["batch"])
         self.assertEqual(
-            ["dslp-aaaa000001", "dslp-aaaa000002"],
+            ["hang-aaaa000001", "hang-aaaa000002"],
             [member["id"] for member in payload["data"]["members"]],
         )
         self.assertEqual(
@@ -4021,20 +4021,20 @@ else:
             ["src/a.ts", "src/b.ts", "src/c.ts"], payload["data"]["files"]
         )
         self.assertEqual(
-            self.action("fix", "dslp-aaaa000001", "dslp-aaaa000002"), payload["next_action"]
+            self.action("fix", "hang-aaaa000001", "hang-aaaa000002"), payload["next_action"]
         )
 
     def test_preview_names_outliers_that_share_no_file_with_the_batch(self) -> None:
         self._preview_backlog()
 
         payload = self.json_invoke(
-            "preview", "--json", "dslp-aaaa000001", "dslp-aaaa000002", "dslp-aaaa000003"
+            "preview", "--json", "hang-aaaa000001", "hang-aaaa000002", "hang-aaaa000003"
         )
 
         self.assertEqual(
             [
                 {
-                    "id": "dslp-aaaa000003",
+                    "id": "hang-aaaa000003",
                     "reason": "shares no file with another selected member",
                 }
             ],
@@ -4045,7 +4045,7 @@ else:
         self._preview_backlog()
 
         payload = self.json_invoke(
-            "preview", "--json", "dslp-aaaa000001", "dslp-aaaa000002"
+            "preview", "--json", "hang-aaaa000001", "hang-aaaa000002"
         )
 
         overlap = payload["data"]["overlap"]
@@ -4060,7 +4060,7 @@ else:
         self._preview_backlog()
 
         payload = self.json_invoke(
-            "preview", "--json", "dslp-aaaa000001", "dslp-aaaa000003"
+            "preview", "--json", "hang-aaaa000001", "hang-aaaa000003"
         )
 
         self.assertEqual([], payload["data"]["overlap"]["shared_files"])
@@ -4071,20 +4071,20 @@ else:
 
         payload = self.json_invoke("preview", "--json", "--limit", "2")
 
-        self.assertEqual(["dslp-aaaa000001", "dslp-aaaa000002"], payload["batch"])
+        self.assertEqual(["hang-aaaa000001", "hang-aaaa000002"], payload["batch"])
 
     def test_preview_refuses_a_settled_member_without_activating_anything(self) -> None:
         self._preview_backlog()
         before = paths(self.repo)["state"].read_bytes()
 
         payload = self.json_invoke(
-            "preview", "--json", "dslp-aaaa000001", "dslp-aaaa000004"
+            "preview", "--json", "hang-aaaa000001", "hang-aaaa000004"
         )
 
         self.assertEqual(1, self.rc)
         self.assertEqual("blocked", payload["state"])
         self.assertEqual(
-            ["dslp-aaaa000004 is resolved; only open or reopened issues are selectable"],
+            ["hang-aaaa000004 is resolved; only open or reopened issues are selectable"],
             payload["blockers"],
         )
         self.assertEqual(before, paths(self.repo)["state"].read_bytes())
@@ -4094,7 +4094,7 @@ else:
         before = paths(self.repo)["state"].read_bytes()
         runs_before = sorted(path.name for path in paths(self.repo)["runs"].glob("*"))
 
-        self.json_invoke("preview", "--json", "dslp-aaaa000001", "dslp-aaaa000002")
+        self.json_invoke("preview", "--json", "hang-aaaa000001", "hang-aaaa000002")
 
         state = load_state(self.repo)
         self.assertEqual(before, paths(self.repo)["state"].read_bytes())
@@ -4107,7 +4107,7 @@ else:
     def test_preview_rejects_an_unknown_issue(self) -> None:
         self._preview_backlog()
 
-        self.assertEqual(2, self.invoke("preview", "dslp-0000000000"))
+        self.assertEqual(2, self.invoke("preview", "hang-0000000000"))
 
     def test_preview_text_output_names_members_and_shared_files(self) -> None:
         self._preview_backlog()
@@ -4119,14 +4119,14 @@ else:
                     "--repo",
                     str(self.repo),
                     "preview",
-                    "dslp-aaaa000001",
-                    "dslp-aaaa000002",
+                    "hang-aaaa000001",
+                    "hang-aaaa000002",
                 ]
             )
 
         output = stdout.getvalue()
         self.assertEqual(0, rc)
-        self.assertIn("dslp-aaaa000001", output)
+        self.assertIn("hang-aaaa000001", output)
         self.assertIn("shared files: src/a.ts", output)
         self.assertIn("file overlap is not semantic coherence", output)
 
@@ -4147,10 +4147,10 @@ def _overlap_backlog() -> dict:
         "history": [],
     }
     members = (
-        ("dslp-aaaa000001", "P1", "open", ["src/a.ts", "src/b.ts"]),
-        ("dslp-aaaa000002", "P2", "open", ["src/a.ts", "src/c.ts"]),
-        ("dslp-aaaa000003", "P3", "open", ["src/z.ts"]),
-        ("dslp-aaaa000004", "P1", "resolved", ["src/a.ts"]),
+        ("hang-aaaa000001", "P1", "open", ["src/a.ts", "src/b.ts"]),
+        ("hang-aaaa000002", "P2", "open", ["src/a.ts", "src/c.ts"]),
+        ("hang-aaaa000003", "P3", "open", ["src/z.ts"]),
+        ("hang-aaaa000004", "P1", "resolved", ["src/a.ts"]),
     )
     return {
         identifier: {
@@ -4178,9 +4178,9 @@ def _mixed_backlog() -> dict:
         "history": [],
     }
     return {
-        "dslp-1111111111": {
+        "hang-1111111111": {
             **common,
-            "id": "dslp-1111111111",
+            "id": "hang-1111111111",
             "source": "fallow",
             "category": "unused_files",
             "status": "open",
@@ -4189,9 +4189,9 @@ def _mixed_backlog() -> dict:
             "files": ["src/dead.ts"],
             "last_seen_run": "run-1",
         },
-        "dslp-2222222222": {
+        "hang-2222222222": {
             **common,
-            "id": "dslp-2222222222",
+            "id": "hang-2222222222",
             "source": "subjective-review",
             "category": "duplication",
             "status": "open",
@@ -4200,9 +4200,9 @@ def _mixed_backlog() -> dict:
             "files": ["src/a.ts", "src/b.ts"],
             "last_seen_run": "run-2",
         },
-        "dslp-3333333333": {
+        "hang-3333333333": {
             **common,
-            "id": "dslp-3333333333",
+            "id": "hang-3333333333",
             "source": "post-review",
             "category": "complexity",
             "status": "resolved",
@@ -4216,7 +4216,7 @@ def _mixed_backlog() -> dict:
 
 def _duplicate_backlog() -> dict:
     earlier = {
-        "id": "dslp-aaaaaaaaaa",
+        "id": "hang-aaaaaaaaaa",
         "source": "subjective-review",
         "source_version": None,
         "category": "duplication",
@@ -4240,7 +4240,7 @@ def _duplicate_backlog() -> dict:
     }
     later = {
         **earlier,
-        "id": "dslp-bbbbbbbbbb",
+        "id": "hang-bbbbbbbbbb",
         "title": "team.ts and authors.ts are the same people list",
         "files": list(earlier["files"]),
         "symbols": list(earlier["symbols"]),
@@ -4479,11 +4479,11 @@ class CliContractTests(unittest.TestCase):
     # m10: readable output and real errors
     def test_fix_of_an_unknown_id_is_an_error(self) -> None:
         self.assertEqual(0, self.run_main("run", "--no-review")[0])
-        code, out, err = self.run_main("fix", "dslp-0000000000")
+        code, out, err = self.run_main("fix", "hang-0000000000")
         self.assertEqual(2, code)
-        self.assertIn("unknown issue dslp-0000000000", err)
+        self.assertIn("unknown issue hang-0000000000", err)
         self.assertNotIn("no open issues", out)
-        code, out, _ = self.run_main("fix", "dslp-0000000000", "--json")
+        code, out, _ = self.run_main("fix", "hang-0000000000", "--json")
         self.assertEqual(2, code)
         self.assertEqual("tool_error", json.loads(out)["state"])
 

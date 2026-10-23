@@ -1961,17 +1961,17 @@ class ReviewPacketEvidenceTests(unittest.TestCase):
                 "inventory": {},
                 "fallow": {"status": "completed", "summary": {"dead_code_issues": 27}},
                 "fallow_comparison": {"comparable": True, "changes": {}},
-                "finding_ids_seen": ["dslp-aaaaaaaaaa"],
+                "finding_ids_seen": ["hang-aaaaaaaaaa"],
             }
             issue = {
-                "id": "dslp-issue000001",
+                "id": "hang-issue000001",
                 "history": [
                     {
                         "event": "verification_failed",
                         "run": "verify-1",
                         "reasons": [
                             "the fix introduced new deterministic finding(s): "
-                            "dslp-aaaaaaaaaa, dslp-bbbbbbbbbb"
+                            "hang-aaaaaaaaaa, hang-bbbbbbbbbb"
                         ],
                     },
                     {"event": "verification_failed", "run": "verify-0", "reasons": ["native check test regressed"]},
@@ -1983,8 +1983,8 @@ class ReviewPacketEvidenceTests(unittest.TestCase):
         self.assertEqual({"comparable": True, "changes": {}}, packet["fallow_comparison"])
         self.assertEqual(
             [
-                {"id": "dslp-aaaaaaaaaa", "first_reported_in": "verify-1", "present_in_this_scan": True},
-                {"id": "dslp-bbbbbbbbbb", "first_reported_in": "verify-1", "present_in_this_scan": False},
+                {"id": "hang-aaaaaaaaaa", "first_reported_in": "verify-1", "present_in_this_scan": True},
+                {"id": "hang-bbbbbbbbbb", "first_reported_in": "verify-1", "present_in_this_scan": False},
             ],
             packet["introduced_findings"],
         )
@@ -2002,7 +2002,7 @@ class ReviewPacketEvidenceTests(unittest.TestCase):
             ]
             packet_path = prepare_review_packet(
                 Path(directory), run_dir, "post-fix", {"inventory": {}},
-                {"id": "dslp-example", "fix_notes": notes},
+                {"id": "hang-example", "fix_notes": notes},
             )
             packet = json.loads(packet_path.read_text())
         self.assertEqual(notes, packet["implementer_notes"])

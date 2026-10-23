@@ -23,7 +23,7 @@ class PacketTests(unittest.TestCase):
             self.assertIn("review-schema.json", REVIEW_ARTIFACTS)
 
     def test_fix_packet_differs_only_in_finish_rule_and_extras(self):
-        member = {"id": "dslp-0000000001", "fix_dir": "d", "title": "t"}
+        member = {"id": "hang-0000000001", "fix_dir": "d", "title": "t"}
         state = {"baseline_run": "b", "latest_run": "l"}
         started = fix_packet(state, "/repo", member, [member], "base", "/b.patch", "Finish with X.")
         handed = fix_packet(state, "/repo", member, [member], "base", None, "Hand back.", activated=False)
@@ -39,9 +39,9 @@ class PacketTests(unittest.TestCase):
     def batch(self):
         shared = {"fix_dir": "/repo/.hangover/fixes/one", "fix_base_commit": "base",
                   "fix_notes": [{"id": "note-one", "text": "CLAIM-" * 1000}],
-                  "fix_finding_ids": [f"dslp-{n:010x}" for n in range(100)],
+                  "fix_finding_ids": [f"hang-{n:010x}" for n in range(100)],
                   "waivers": [{"id": "waived", "reason": "explicit acceptance"}]}
-        return [{"id": f"dslp-{n:010x}", "status": "in_progress", "title": f"Claim {n}",
+        return [{"id": f"hang-{n:010x}", "status": "in_progress", "title": f"Claim {n}",
                  "evidence": [f"evidence {n}"], "invariants": [f"invariant {n}"],
                  "harm": f"harm {n}", "proposed_change": f"change {n}",
                  "history": [{"event": "old review", "verdict": "PRIOR-VERDICT" * 1000}],

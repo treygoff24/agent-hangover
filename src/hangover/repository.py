@@ -1779,9 +1779,7 @@ def state_owned(repo: Path) -> bool:
     if not isinstance(recorded, dict):
         return False
     identity = _state_identity(root)
-    # The legacy label is accepted only inside the new state directory. A same-filesystem
-    # rename preserves its parent/device/inode binding; no legacy state is read in place.
-    if recorded.get("tool") not in ("hangover", "deslop"):
+    if recorded.get("tool") != "hangover":
         return False
     return all(recorded.get(key) == value for key, value in identity.items() if key != "tool")
 

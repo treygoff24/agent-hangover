@@ -6,7 +6,7 @@ Words used throughout:
 
 - **campaign**: one repository's cleanup effort, kept in `.hangover/` across sessions;
 - **gate**: the repository's own checks (tests, types, lint, build), discovered by `hangover init` and stored in `.hangover/config.json`;
-- **card** (or issue): one backlog item, from an analyzer finding or a review finding, with an ID such as `dslp-9a2d94daa6`;
+- **card** (or issue): one backlog item, from an analyzer finding or a review finding, with an ID such as `hang-9a2d94daa6`;
 - **batch**: the cards one fix covers, locked by `hangover fix`;
 - **fix packet**: the JSON `hangover fix` prints, with each card's evidence, the behavior that must not change (its invariants), and how to verify;
 - **fresh review**: a separate model run that sees only the diff and the evidence, never earlier verdicts.
@@ -17,12 +17,12 @@ Words used throughout:
 hangover run
 hangover status
 hangover next
-hangover fix dslp-0123456789 [dslp-9876543210 ...]
+hangover fix hang-0123456789 [hang-9876543210 ...]
 
 # You (or your agent) read the fix packet, find out why the code exists before
 # removing it, edit one coherent batch, and run narrow checks while working.
 
-hangover verify --issue dslp-0123456789
+hangover verify --issue hang-0123456789
 hangover next
 ```
 
@@ -32,7 +32,7 @@ Select only the issues you intend to fix. If a batch is too broad, release named
 members without deferring the rest:
 
 ```bash
-hangover fix --release dslp-9876543210
+hangover fix --release hang-9876543210
 hangover verify  # uses the surviving primary, including after primary release
 ```
 
@@ -85,7 +85,7 @@ Leave risky work explicit with a recorded reason, rather than treating it as
 completed:
 
 ```bash
-hangover fix dslp-0123456789 --defer "Dynamic plugin registration has no safe local parity test"
+hangover fix hang-0123456789 --defer "Dynamic plugin registration has no safe local parity test"
 ```
 
 ## Gating new changes with audit
