@@ -44,9 +44,9 @@ belong outside this tool's repository.
 ## Example: Claude through delegate
 
 [examples/review-claude.sh](examples/review-claude.sh) is one optional wrapper. It
-requires Bash, Python 3, and an authenticated `delegate` CLI on PATH. Delegate is
-an operator-installed tool that routes prompts to model back ends; it is not
-included with agent-hangover. Substitute your own CLI using the contract above
+requires Bash, Python 3.11+, and an authenticated `delegate` CLI on PATH.
+[Delegate](https://github.com/treygoff24/delegate-agent) is a separate tool that
+routes prompts to coding-agent CLIs; it is not included with agent-hangover. Substitute your own CLI using the contract above
 if you do not use delegate.
 
 Run the example from where hangover is installed, not a detached copy: it reuses

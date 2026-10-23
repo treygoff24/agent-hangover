@@ -1,6 +1,6 @@
 """Gate proof reuse: a passing full gate, remembered against the exact tree it saw.
 
-A proof is keyed by `gate_key` (see its docstring and the README): the check
+A proof is keyed by `gate_key` (see its docstring and docs/workflow.md): the check
 list, working-tree content, HEAD, the staged index, lockfiles and install
 markers, and a mode/content fingerprint of ignored files outside dependency directories.
 A proof is recorded only when the complete key before the gate equals the

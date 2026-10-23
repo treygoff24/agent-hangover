@@ -216,7 +216,7 @@ def _legacy_state_hint(repo: Path, out: TextIO) -> bool:
     if os.path.lexists(repo / ".deslop") and not os.path.lexists(repo / ".hangover"):
         print("info: legacy .deslop state found; migrate your own state with `mv .deslop .hangover` "
               "(a same-filesystem move preserves the owner marker), then update legacy configuration "
-              "paths (see CHANGELOG.md); or use `hangover init --ignore-legacy` for a fresh campaign",
+              "paths; or use `hangover init --ignore-legacy` for a fresh campaign",
               file=out)
         return True
     return False

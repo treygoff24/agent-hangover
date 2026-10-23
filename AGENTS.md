@@ -6,19 +6,22 @@ Instructions for anyone changing this repository, human or coding agent.
 ## What is here
 
 - `src/hangover/`: the `hangover` CLI, a Python 3.11+ package using only the
-  standard library. `python3 -m hangover` runs it from a checkout.
+  standard library. `PYTHONPATH=src python3 -m hangover` runs it from a checkout.
 - `bin/hangover`: the launcher npm installs as both `hangover` and
   `agent-hangover`. It re-runs `python3 -I` and pins its own `src/` first.
 - `prompts/` and `schemas/`: the review prompts and the review JSON schema.
 - `skills/hangover/`: the agent skill that drives the workflow.
-- `docs/command-review-runner.md` and `docs/examples/`: the contract for a
-  custom review command, with one example runner.
+- `docs/`: user documentation. `trust-model.md` is the security boundary,
+  `reference.md` the commands and exit codes, `agent-setup.md` the install
+  guide for AI agents; `command-review-runner.md` and `docs/examples/` are the
+  contract for a custom review command, with one example runner.
 - `tests/`: unit and end-to-end tests against disposable Git repositories;
   Rust fixtures live in `tests/fixtures/rust/`.
 
-The README's Trust model and Safety model sections describe the behaviour
-every change must keep. Read them before touching anything that runs a
-subprocess, reads a repository file, or writes state.
+[docs/trust-model.md](docs/trust-model.md) describes the behaviour every
+change must keep, including its safety rules for remediation. Read it before
+touching anything that runs a subprocess, reads a repository file, or writes
+state.
 
 ## Rules that hold
 
@@ -45,7 +48,12 @@ subprocess, reads a repository file, or writes state.
   that directory; tracked state is refused in every mode
   (`refuse_foreign_state`). Never trust state a checkout ships.
 - **Security refusals exit 2; "needs your action" exits 1.** Keep the exit-code
-  table in the README in step with `cli.py`.
+  table in `docs/reference.md` in step with `cli.py`.
+- **No framework.** Add no plugin system preemptively. Add one focused
+  subprocess adapter only when a real language or tool has structured output,
+  a tested failure contract, and a repository that needs it. Keep campaign
+  state, verification, and review schemas stable; keep tool-specific raw
+  output opaque.
 
 ## Testing
 
@@ -54,6 +62,13 @@ npm ci        # pinned Fallow, ast-grep and jscpd for the analyzer tests
 npm run check # compiles, then runs every test module
 ```
 
+One module at a time (`-s tests` puts the shared test helpers on the import
+path): `PYTHONPATH=src python3 -m unittest discover -s tests -p test_cli.py`.
+The Rust tests skip where cargo, ast-grep or jscpd is missing, and a few process
+tests run only on macOS. Running hangover on this checkout prints a Rust
+manifest notice for `tests/fixtures/rust/`; that is expected, since the
+repository has no root `Cargo.toml`.
+
 A security fix needs a regression test that plants a repository with a
 canary outside it and asserts both the exit code and that the canary never
 appears in output or stored state. Watch the test fail on the unfixed code
@@ -61,5 +76,7 @@ before you trust it.
 
 ## Changes
 
-Record user-visible changes in `CHANGELOG.md`. Report vulnerabilities
-privately through GitHub security advisories, not public issues.
+Record user-visible changes in `CHANGELOG.md`, and update the page under
+`docs/` (or the README) that describes the behaviour you changed. Report
+vulnerabilities privately through GitHub security advisories, not public
+issues.
